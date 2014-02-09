@@ -28,7 +28,7 @@ end
 class Crawler
   attr_reader :loc, :mass
 
-  def initialize
+  def initialize(width, height)
     @acc = PVector.new
     @vel = PVector.new(random(-1, 1), random(-1, 1))
     @loc = PVector.new(random(width), random(height))
@@ -54,7 +54,7 @@ class Crawler
 
   # Method to display
   def display
-    angle = Math.atan2(@vel.x, @vel.y)
+    angle = @vel.heading2D
     push_matrix
     translate(@loc.x, @loc.y)
     rotate(angle)
@@ -140,7 +140,7 @@ end
 def setup
   size(640, 360)
   # Some random bodies
-  @crawlers = Array.new(5){ Crawler.new }
+  @crawlers = Array.new(5){ Crawler.new(width, height) }
   # Create an attractive body
   @a = Attractor.new(PVector.new(width/2, height/2), 20, 0.4)
 end

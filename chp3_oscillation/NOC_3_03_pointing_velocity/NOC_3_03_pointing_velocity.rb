@@ -3,8 +3,8 @@
 class Mover
   attr_reader :location, :mass
 
-  def initialize
-    @location = PVector.new(width/2, height/2)
+  def initialize(x, y)
+    @location = PVector.new(x, y)
     @velocity = PVector.new(0, 0)
     @topspeed = 4
     @xoff = 1000
@@ -23,7 +23,7 @@ class Mover
   end
 
   def display
-    theta = -1 * Math.atan2(-@location.y, @location.x)
+    theta = @location.heading2D
 
     stroke(0)
     stroke_weight(2)
@@ -36,7 +36,7 @@ class Mover
     pop_matrix
   end
 
-  def check_edges
+  def check_edges(width, height)
     if @location.x > width
       @location.x = 0
     elsif @location.x < 0
@@ -54,13 +54,13 @@ end
 # NOC_3_03_pointing_velocity
 def setup
   size(800, 200)
-  @mover = Mover.new
+  @mover = Mover.new(width/2, height/2)
 end
 
 def draw
   background(255)
 
   @mover.update
-  @mover.check_edges
+  @mover.check_edges(width, height)
   @mover.display
 end

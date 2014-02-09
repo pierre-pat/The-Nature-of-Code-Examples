@@ -80,7 +80,7 @@ end
 
 def setup
   size(640, 360)
-  img = load_image("data/texture.png")
+  img = load_image("#{Dir.pwd}/data/texture.png")
   @ps = ParticleSystem.new(0, PVector.new(width/2,height-75), img)
   smooth
 end
@@ -107,7 +107,7 @@ def draw_vector(v, loc, scayl)
   translate(loc.x, loc.y)
   stroke(255)
   # Call vector heading function to get direction (note that pointing up is a heading of 0) and rotate
-  rotate(Math.atan2(v.x, v.y))
+  rotate(v.heading2D)
   # Calculate length of vector & scale it to be bigger or smaller if necessary
   len = v.mag * scayl
   # Draw three lines to make an arrow (draw pointing up since we've rotate to the proper direction)
