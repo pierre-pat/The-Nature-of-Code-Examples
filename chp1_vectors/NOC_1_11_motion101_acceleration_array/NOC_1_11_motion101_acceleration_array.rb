@@ -2,7 +2,7 @@
 # http://natureofcode.com
 
 class Mover
-  def initialize
+  def initialize(width, height)
     @location = PVector.new(rand(width/2), rand(height/2))
     @velocity = PVector.new(0, 0)
     @topspeed = 6
@@ -30,7 +30,7 @@ end
 # NOC_1_11_motion101_acceleration_array
 def setup
   size(800, 200)
-  @movers = Array.new(20) { Mover.new }
+  @movers = Array.new(20) { Mover.new(width, height) }
 end
 
 def draw

@@ -2,7 +2,7 @@
 # http://natureofcode.com
 
 class Mover
-  def initialize
+  def initialize(width, height)
     @location = PVector.new(rand(width/2), rand(height/2))
     @velocity = PVector.new(0, 0)
     @topspeed = 6
@@ -24,7 +24,7 @@ class Mover
     ellipse(@location.x, @location.y, 48, 48)
   end
 
-  def check_edges
+  def check_edges(width, height)
     if @location.x > width
       @location.x = 0
     elsif @location.x < 0
@@ -42,13 +42,13 @@ end
 #NOC_1_9_motion101_acceleration
 def setup
   size(800, 200)
-  @mover = Mover.new
+  @mover = Mover.new(width, height)
 end
 
 def draw
   background(255)
 
   @mover.update
-  @mover.check_edges
+  @mover.check_edges(width, height)
   @mover.display
 end
