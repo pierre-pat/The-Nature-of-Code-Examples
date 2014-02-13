@@ -5,4 +5,4 @@ Ruby port of the http://natureofcode.com
 
 Ruby version ruby 2.0dev
 
-Ruby-Processing version 1.0.11
+Ruby-Processing version 2.4.2
