@@ -10,9 +10,9 @@ class Particle
     @lifespan = 255.0
   end
 
-  def run
+  def run(width, height)
     update
-    display
+    display(width, height)
   end
 
   # Method to update location
@@ -23,7 +23,7 @@ class Particle
   end
 
   # Method to display
-  def display
+  def display(width, height)
     stroke(0, @lifespan)
     stroke_weight(2)
     fill(127, @lifespan)
@@ -41,7 +41,7 @@ class Confetti < Particle
     super
   end
 
-  def display
+  def display(width, height)
     rect_mode(CENTER)
     fill(127, @lifespan)
     stroke(0, @lifespan)
@@ -69,8 +69,8 @@ class ParticleSystem
                             end
   end
 
-  def run
-    @particles.each{ |p| p.run }
+  def run(width, height)
+    @particles.each{ |p| p.run(width, height) }
     @particles.delete_if{ |p| p.is_dead? }
   end
 end
@@ -83,5 +83,5 @@ end
 def draw
   background(255)
   @particle_system.add_particle
-  @particle_system.run
+  @particle_system.run(width, height)
 end

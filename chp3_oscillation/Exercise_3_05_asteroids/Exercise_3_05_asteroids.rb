@@ -5,7 +5,7 @@
 
 class Spaceship
 
-  def initialize
+  def initialize(width, height)
     @location = PVector.new(width/2, height/2)
     @velocity = PVector.new
     @acceleration = PVector.new
@@ -55,7 +55,7 @@ class Spaceship
     @thrusting = true
   end
 
-  def wrap_edges
+  def wrap_edges(width, height)
     buffer = @r*2
     if @location.x > width +  buffer
       @location.x = -buffer
@@ -99,7 +99,7 @@ end
 # Exercise_3_05_asteroids
 def setup
   size(640, 360)
-  @ship = Spaceship.new
+  @ship = Spaceship.new(width, height)
 end
 
 def draw
@@ -108,7 +108,7 @@ def draw
   # Update location
   @ship.update
   # Wrape edges
-  @ship.wrap_edges
+  @ship.wrap_edges(width, height)
   # Draw ship
   @ship.display
 

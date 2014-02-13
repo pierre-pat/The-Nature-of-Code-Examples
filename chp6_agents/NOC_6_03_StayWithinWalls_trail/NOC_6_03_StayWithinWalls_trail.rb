@@ -39,7 +39,7 @@ class Vehicle
     @history.shift if @history.size > 100
   end
 
-  def boundaries
+  def boundaries(width, height)
     desired =  if @location.x < @d
                         PVector.new(@maxspeed, @velocity.y)
                       elsif @location.x > @world.width - @d
@@ -98,6 +98,6 @@ def draw
   rect(width/2, height/2, width-@d*2, height-@d*2)
 
   # Call the appropriate steering behaviors for our agents
-  @v.boundaries
+  @v.boundaries(width, height)
   @v.run
 end

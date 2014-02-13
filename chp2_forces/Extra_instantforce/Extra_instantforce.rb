@@ -6,7 +6,7 @@ class Mover
 
   attr_reader :location
 
-  def initialize
+  def initialize(width, height)
     @location = PVector.new(width/2, height/2)
     @velocity = PVector.new(0, 0)
     @acceleration = PVector.new(0, 0)
@@ -40,7 +40,7 @@ class Mover
     ellipse(@location.x, @location.y, 48, 48)
   end
 
-  def check_edges
+  def check_edges(width, height)
     if @location.x > width
       @location.x = width
       @velocity.x *= -1
@@ -62,7 +62,7 @@ end
 
 def setup
   size(640, 360)
-  @mover = Mover.new
+  @mover = Mover.new(width, height)
   @t = 0.0
 end
 
@@ -94,7 +94,7 @@ def draw
 
   @mover.update
   @mover.display
-  #@mover.check_edges
+  #@mover.check_edges(width, height)
 end
 
 # Instant Force

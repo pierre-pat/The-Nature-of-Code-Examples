@@ -41,7 +41,7 @@ class Mover
     force
   end
 
-  def boundaries
+  def boundaries(width, height)
     d = 50
     force = PVector.new(0, 0)
 
@@ -80,7 +80,7 @@ def draw
       end
     end
 
-    m.boundaries
+    m.boundaries(width, height)
     m.update
     m.display
   end

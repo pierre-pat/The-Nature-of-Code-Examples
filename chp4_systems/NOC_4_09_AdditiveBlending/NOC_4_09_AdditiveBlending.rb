@@ -41,7 +41,7 @@ end
 class ParticleSystem
   def initialize(num, origin)
     @origin = origin
-    @img = load_image("texture.png")
+    @img = load_image("#{Dir.pwd}/data/texture.png")
     @particles = Array.new(num) { Particle.new(@origin, @img) }
   end
 

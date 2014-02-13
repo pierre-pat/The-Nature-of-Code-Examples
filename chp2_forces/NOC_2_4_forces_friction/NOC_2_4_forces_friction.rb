@@ -29,7 +29,7 @@ class Mover
     ellipse(@location.x, @location.y, @mass*16, @mass*16)
   end
 
-  def check_edges
+  def check_edges(width, height)
     if @location.x > width
       @location.x = width
       @velocity.x *= -1
@@ -73,6 +73,6 @@ def draw
 
     m.update
     m.display
-    m.check_edges
+    m.check_edges(width, height)
   end
 end

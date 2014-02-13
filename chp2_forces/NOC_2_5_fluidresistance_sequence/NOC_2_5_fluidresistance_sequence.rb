@@ -72,7 +72,7 @@ class Mover
   end
 
   # bounce off the bottom of the window
-  def check_edges
+  def check_edges(height)
     if @location.y > height
       @velocity.y *= -0.9  # A little dampening when hitting the bottom
       @location.y = height
@@ -116,7 +116,7 @@ def draw
     # Update and display
     m.update
     m.display
-    m.check_edges
+    m.check_edges(height)
   end
 
   fill(0)

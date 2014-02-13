@@ -47,7 +47,7 @@ end
 
 class Attractor
 
-  def initialize
+  def initialize(width, height)
     @location = PVector.new(width/2, height/2)
     @mass = 20
     @g = 0.4
@@ -76,7 +76,7 @@ def setup
   size(800, 200)
   background(255)
   @movers = Array.new(20) { Mover.new(random(0.1, 2), random(width), random(height)) }
-  @a = Attractor.new
+  @a = Attractor.new(width, height)
 end
 
 def draw

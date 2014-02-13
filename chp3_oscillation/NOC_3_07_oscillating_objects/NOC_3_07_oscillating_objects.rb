@@ -4,7 +4,7 @@
 
 class Oscillator
 
-  def initialize
+  def initialize(width, height)
     @angle = PVector.new
     @velocity = PVector.new(random(-0.05, 0.05), random(-0.05, 0.05))
     @amplitude = PVector.new(random(20, width/2), random(20, height/2))
@@ -14,7 +14,7 @@ class Oscillator
     @angle.add(@velocity)
   end
 
-  def display
+  def display(width, height)
     x = sin(@angle.x)*@amplitude.x
     y = sin(@angle.y)*@amplitude.y
 
@@ -33,7 +33,7 @@ end
 def setup
   size(800, 200)
   smooth
-  @oscillators = Array.new(10) { Oscillator.new }
+  @oscillators = Array.new(10) { Oscillator.new(width, height) }
   background(255)
 end
 
@@ -41,6 +41,6 @@ def draw
   background(255)
   @oscillators.each do |o|
     o.oscillate
-    o.display
+    o.display(width, height)
   end
 end

@@ -6,7 +6,7 @@
 class Attractor
   G = 1
 
-  def initialize
+  def initialize(width, height)
     @location = PVector.new(width/2, height/2)
     @mass = 20
     @drag_offset = PVector.new(0.0, 0.0)
@@ -99,7 +99,7 @@ end
 def setup
   size(640, 360)
   @movers = Array.new(10) { Mover.new(random(width), random(height), random(0.1, 2)) }
-  @attractor = Attractor.new
+  @attractor = Attractor.new(width, height)
 end
 
 def draw

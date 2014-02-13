@@ -42,7 +42,7 @@ class FlowField
   def lookup(vector)
     column = constrain(vector.x/@resolution, 0, @cols-1)
     row = constrain(vector.y/@resolution, 0, @rows-1)
-    return @field[column][row].get
+    @field[column][row].get
   end
 end
 
@@ -58,9 +58,9 @@ class Vehicle
     @world = world
   end
 
-  def run
+  def run(width, height)
     update
-    borders
+    borders(width, height)
     display
   end
 
@@ -102,7 +102,7 @@ class Vehicle
     pop_matrix
   end
 
-  def borders
+  def borders(width, height)
     @location.x = @world.width+@r if @location.x < -@r
     @location.y = @world.height+@r if @location.y < -@r
     @location.x = -@r if @location.x > @world.width+@r
@@ -122,7 +122,7 @@ def draw
   background(255)
   @vehicles.each do |v|
     v.follow(@flowfield)
-    v.run
+    v.run(width, height)
   end
   @flowfield.display
 end
