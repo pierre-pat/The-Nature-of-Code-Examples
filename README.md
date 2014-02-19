@@ -1,12 +1,19 @@
-The-Nature-of-Code-Examples
-===========================
+#The-Nature-of-Code-Examples
 
-Ruby port of the http://natureofcode.com
+A ruby port of the [examples][] from [The Nature of Code][] by Daniel Shiffman.
 
-Ruby version ruby 2.0dev
 
-Ruby-Processing version 2.4.2
+Although many of the sketches here stand on their own merit, you should remember that they were originally designed to illustrate the book (so to get the most from them you should definetly [get the book][]). Since the sketches have been translated to a more idiomatic ruby, some of the sketches may not exactly match the points made in the book. However such sketches do serve to demonstrate the differences between processing and ruby-processing.
 
-I tried to stay as close as possible to the original code.
+## Tested versions 
 
-If you have any comments or suggestions, feel free to contact me.
+ruby 2.0
+
+jruby-1.7.11
+
+ruby-processing version 2.4+
+
+
+[The Nature of Code]:http://natureofcode.com
+[get the book]:http://natureofcode.com
+[examples]:https://github.com/shiffman/The-Nature-of-Code-Examples
