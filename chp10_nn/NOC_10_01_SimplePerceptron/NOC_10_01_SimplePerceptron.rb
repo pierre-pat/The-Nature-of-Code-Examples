@@ -9,7 +9,7 @@ class Perceptron
 
   # Perceptron is created with n weights and learning constant
   def initialize(n, c)
-    @weights = Array.new(n) { random(-1, 1) }
+    @weights = Array.new(n) { rand(-1.0 .. 1) }
     @c = c # learning constant
   end
 
@@ -31,7 +31,7 @@ class Perceptron
   def feedforward(inputs)
     # Sum all values
     sum = 0
-    @weights.each_index{|i| sum += inputs[i] * @weights[i]}
+    @weights.zip(inputs).flatten.each_slice(2){|i, j| sum += i * j}
     # Result is sign of the sum, -1 or 1
     activate(sum)
   end
@@ -57,7 +57,7 @@ end
 
 # The function to describe a line
 def f(x)
-  0.4*x+1
+  0.4 * x + 1
 end
 
 def setup
@@ -76,8 +76,8 @@ def setup
 
    #Create a random set of training points and calculate the "known" answer
   @training = Array.new(2000) do
-    x = random(@xmin, @xmax)
-    y = random(@ymin, @ymax)
+    x = rand(@xmin .. @xmax)
+    y = rand(@ymin .. @ymax)
     answer = y < f(x) ? -1 : 1
     Trainer.new(x, y, answer)
   end
@@ -119,9 +119,10 @@ def draw
     stroke(0)
     stroke_weight(1)
     fill(0)
-    guess = @ptron.feedforward(@training[i].inputs)
+    train = @training[i]
+    guess = @ptron.feedforward(train.inputs)
     no_fill if guess > 0
 
-    ellipse(@training[i].inputs[0], @training[i].inputs[1], 8, 8);
+    ellipse(train.inputs[0], train.inputs[1], 8, 8)
   end
 end

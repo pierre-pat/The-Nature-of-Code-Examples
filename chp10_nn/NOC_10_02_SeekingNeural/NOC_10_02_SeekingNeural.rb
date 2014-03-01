@@ -3,11 +3,12 @@
 
 # Simple Perceptron Example
 # See: http://en.wikipedia.org/wiki/Perceptron
+load_library :vecmath
 
 class Perceptron
   # Perceptron is created with n weights and learning constant
   def initialize(n, c)
-    @weights = Array.new(n){ random(0, 1) }
+    @weights = Array.new(n){ rand(0 .. 1) }
     @c = c
   end
 
@@ -17,17 +18,17 @@ class Perceptron
     @weights.each_index do |i|
       @weights[i] += @c*error.x*forces[i].x
       @weights[i] += @c*error.y*forces[i].y
-      @weights[i] = constrain(@weights[i], 0.to_f, 1.to_f)
+      @weights[i] = constrain(@weights[i], 0.0, 1.0)
     end
   end
 
   # Give me a steering result
   def feedforward(forces)
     # Sum all values
-    sum = PVector.new
+    sum = Vec2D.new
     @weights.each_index do |i|
-      forces[i].mult(@weights[i])
-      sum.add(forces[i])
+      forces[i] *= @weights[i]
+      sum += forces[i]
     end
     sum
   end
@@ -40,9 +41,9 @@ class Vehicle
 
   def initialize(n, x, y)
     @brain = Perceptron.new(n, 0.001)
-    @acceleration = PVector.new(0, 0)
-    @velocity = PVector.new(0, 0)
-    @location = PVector.new(x, y)
+    @acceleration = Vec2D.new(0, 0)
+    @velocity = Vec2D.new(0, 0)
+    @location = Vec2D.new(x, y)
     @r = 3.0
     @maxspeed = 4
     @maxforce = 0.1
@@ -51,12 +52,12 @@ class Vehicle
   # Method to update location
   def update(width, height)
     # Update velocity
-    @velocity.add(@acceleration)
+    @velocity  += @acceleration
     # Limit speed
-    @velocity.limit(@maxspeed)
-    @location.add(@velocity)
+    @velocity.set_mag(@maxspeed) if @velocity.mag_squared > @maxspeed * @maxspeed
+    @location  += @velocity
     # Reset accelerationelertion to 0 each cycle
-    @acceleration.mult(0)
+    @acceleration *= 0
 
     @location.x = constrain(@location.x, 0, width)
     @location.y = constrain(@location.y, 0, height)
@@ -64,7 +65,7 @@ class Vehicle
 
   def apply_force(force)
     # We could add mass here if we want A = F / M
-    @acceleration.add(force)
+    @acceleration  += force
   end
 
   # Here is where the brain processes everything
@@ -79,29 +80,28 @@ class Vehicle
     apply_force(result)
 
     # Train the brain according to the error
-    error = PVector.sub(desired, @location)
+    error = desired - @location
     @brain.train(forces, error)
    end
 
   # A method that calculates a steering force towards a target
   # STEER = DESIRED MINUS VELOCITY
   def seek(target)
-    desired = PVector.sub(target, @location)  # A vector pointing from the location to the target
+    desired = target - @location  # A vector pointing from the location to the target
 
     # Normalize desired and scale to maximum speed
-    desired.normalize
-    desired.mult(@maxspeed)
+    desired.normalize!
+    desired *= @maxspeed
     # Steering = Desired minus velocity
-    steer = PVector.sub(desired, @velocity)
-    steer.limit(@maxforce)  # Limit to maximum steering force
-
+    steer = desired - @velocity
+    steer.set_mag(@maxforce) if steer.mag_squared > @maxforce * @maxforce # Limit to maximum steering force
     steer
   end
 
   def display
 
     # Draw a triangle rotated in the direction of velocity
-    theta = @velocity.heading2D + PI/2
+    theta = @velocity.heading + PI/2
     fill(175)
     stroke(0)
     stroke_weight(1)
@@ -122,19 +122,19 @@ end
 def setup
   size(640, 360)
   # The Vehicle's desired location
-  @desired = PVector.new(width/2, height/2)
+  @desired = Vec2D.new(width/2, height/2)
 
   # Create a list of targets
   make_targets
 
   # Create the Vehicle (it has to know about the number of targets
   # in order to configure its brain)
-  @v = Vehicle.new(@targets.size, random(width), random(height))
+  @v = Vehicle.new(@targets.size, rand(width), rand(height))
 end
 
 # Make a random ArrayList of targets to steer towards
 def make_targets
-  @targets = Array.new(8) { PVector.new(random(width), random(height)) }
+  @targets = Array.new(8) { Vec2D.new(rand(width), rand(height)) }
 end
 
 def draw
@@ -152,8 +152,8 @@ def draw
     stroke(0)
     stroke_weight(2)
     ellipse(target.x, target.y, 16, 16)
-    line(target.x, target.y-16, target.x, target.y+16)
-    line(target.x-16, target.y, target.x+16, target.y)
+    line(target.x, target.y - 16, target.x, target.y + 16)
+    line(target.x - 16, target.y, target.x + 16, target.y)
   end
 
   # Update the Vehicle
