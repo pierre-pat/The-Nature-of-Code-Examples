@@ -7,7 +7,7 @@
 class Perceptron
   attr_reader :weights
 
-  # Perceptron is created with n weights and learning constant
+  # Perceptron is created with n weights and a learning constant
   def initialize(n, c)
     @weights = Array.new(n) { rand(-1.0 .. 1) }
     @c = c # learning constant
@@ -42,11 +42,12 @@ class Perceptron
 end
 
 # A class to describe a training point
-# Has an x and y, a "bias" (1) and known output
+# Has an x and y, a "bias" (1) and a known output
 # Could also add a variable for "guess" but not required here
 
 class Trainer
   attr_reader :inputs, :answer
+
   def initialize(x, y, a)
     @inputs = [x, y, 1]
     @answer = a

@@ -8,7 +8,7 @@ load_library :vecmath
 class Perceptron
   # Perceptron is created with n weights and learning constant
   def initialize(n, c)
-    @weights = Array.new(n){ rand(0 .. 1) }
+    @weights = Array.new(n){ rand(0 .. 1.0) }
     @c = c
   end
 
@@ -16,8 +16,8 @@ class Perceptron
   # Weights are adjusted based on vehicle's error
   def train(forces, error)
     @weights.each_index do |i|
-      @weights[i] += @c*error.x*forces[i].x
-      @weights[i] += @c*error.y*forces[i].y
+      @weights[i] += @c * error.x * forces[i].x
+      @weights[i] += @c * error.y * forces[i].y
       @weights[i] = constrain(@weights[i], 0.0, 1.0)
     end
   end
@@ -38,25 +38,29 @@ end
 # Daniel Shiffman <http://www.shiffman.net>
 
 class Vehicle
-
+  
+  MAX_SPEED = 4
+  MAX_FORCE = 0.1
+  attr_reader :brain, :sz
+  
   def initialize(n, x, y)
     @brain = Perceptron.new(n, 0.001)
     @acceleration = Vec2D.new(0, 0)
     @velocity = Vec2D.new(0, 0)
     @location = Vec2D.new(x, y)
-    @r = 3.0
-    @maxspeed = 4
-    @maxforce = 0.1
+    @sz = 6.0
+    @maxspeed_squared = MAX_SPEED * MAX_SPEED
+    @maxforce_squared = MAX_FORCE * MAX_FORCE
   end
 
   # Method to update location
   def update(width, height)
     # Update velocity
-    @velocity  += @acceleration
+    @velocity += @acceleration
     # Limit speed
-    @velocity.set_mag(@maxspeed) if @velocity.mag_squared > @maxspeed * @maxspeed
-    @location  += @velocity
-    # Reset accelerationelertion to 0 each cycle
+    @velocity.set_mag(MAX_SPEED) if @velocity.mag_squared > @maxspeed_squared
+    @location += @velocity
+    # Reset acceleration to 0 each cycle
     @acceleration *= 0
 
     @location.x = constrain(@location.x, 0, width)
@@ -65,7 +69,7 @@ class Vehicle
 
   def apply_force(force)
     # We could add mass here if we want A = F / M
-    @acceleration  += force
+    @acceleration += force
   end
 
   # Here is where the brain processes everything
@@ -74,14 +78,14 @@ class Vehicle
     forces = Array.new(targets.size){ |i| seek(targets[i]) }
 
     # That array of forces is the input to the brain
-    result = @brain.feedforward(forces)
+    result = brain.feedforward(forces)
 
     # Use the result to steer the vehicle
     apply_force(result)
 
     # Train the brain according to the error
     error = desired - @location
-    @brain.train(forces, error)
+    brain.train(forces, error)
    end
 
   # A method that calculates a steering force towards a target
@@ -89,19 +93,19 @@ class Vehicle
   def seek(target)
     desired = target - @location  # A vector pointing from the location to the target
 
-    # Normalize desired and scale to maximum speed
+    # Normalize desired and scale to the maximum speed
     desired.normalize!
-    desired *= @maxspeed
+    desired *= MAX_SPEED
     # Steering = Desired minus velocity
     steer = desired - @velocity
-    steer.set_mag(@maxforce) if steer.mag_squared > @maxforce * @maxforce # Limit to maximum steering force
+    steer.set_mag(MAX_FORCE) if steer.mag_squared > @maxforce_squared # Limit to a maximum steering force
     steer
   end
 
   def display
 
     # Draw a triangle rotated in the direction of velocity
-    theta = @velocity.heading + PI/2
+    theta = @velocity.heading + Math::PI / 2
     fill(175)
     stroke(0)
     stroke_weight(1)
@@ -109,9 +113,9 @@ class Vehicle
     translate(@location.x, @location.y)
     rotate(theta)
     begin_shape
-    vertex(0, -@r*2)
-    vertex(-@r, @r*2)
-    vertex(@r, @r*2)
+    vertex(0, -sz)
+    vertex(-sz * 0.5, sz)
+    vertex(sz * 0.5, sz)
     end_shape(CLOSE)
     pop_matrix
   end
