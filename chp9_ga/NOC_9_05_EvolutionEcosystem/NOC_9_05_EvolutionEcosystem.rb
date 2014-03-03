@@ -10,7 +10,7 @@
 
 load_library :vecmath
 
-require 'world'
+require_relative './world'
 
 include Eco
 
