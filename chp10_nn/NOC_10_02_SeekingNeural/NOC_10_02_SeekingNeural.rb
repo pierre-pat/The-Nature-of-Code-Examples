@@ -72,7 +72,7 @@ class Vehicle
   # Here is where the brain processes everything
   def steer(targets, desired)
     # Steer towards all targets
-    forces = Array.new(targets.size){ |i| seek(targets[i]) }
+    forces = targets.map{|target| seek(target)}
 
     # That array of forces is the input to the brain
     result = brain.feedforward(forces)
