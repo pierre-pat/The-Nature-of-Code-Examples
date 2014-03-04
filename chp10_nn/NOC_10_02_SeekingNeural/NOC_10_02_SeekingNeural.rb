@@ -25,10 +25,9 @@ class Perceptron
   # Give me a steering result
   def feedforward(forces)
     # Sum all values
-    forces.size.times do |i|
-      forces[i] *= @weights[i]
-    end
-    sum = forces.inject(Vec2D.new){|a, b| a + b}
+    mult = []
+    forces.zip(@weights).each{|a, b| mult << a * b}
+    mult.inject(Vec2D.new){|c, d| c + d}
   end
 end
 
