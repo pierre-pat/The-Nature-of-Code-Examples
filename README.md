@@ -3,10 +3,8 @@ The-Nature-of-Code-Examples
 
 Ruby port of the http://natureofcode.com
 
-Ruby version ruby 2.0dev
+Ruby version ruby 2.0
 
-Ruby-Processing version 2.4.2
+Ruby-Processing version 2.4.3
 
-I tried to stay as close as possible to the original code.
-
-If you have any comments or suggestions, feel free to contact me.
+Mainly as created by Dan Shiffman, and translated to ruby-processing by Pierre-Pat. Hovever I could not resist changing PVector to vecmath classes.
