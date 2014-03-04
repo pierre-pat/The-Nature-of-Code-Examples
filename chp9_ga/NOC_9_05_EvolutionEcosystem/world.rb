@@ -153,7 +153,7 @@ module Eco
         bloops << child if child
       end
       
-      bloops.delete_if do |b|
+      bloops.reject! do |b|
         if b.dead?
           food << b.location
           true
