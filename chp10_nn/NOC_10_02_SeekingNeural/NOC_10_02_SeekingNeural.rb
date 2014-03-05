@@ -1,8 +1,6 @@
 # The Nature of Code
 # http://natureofcode.com
 
-# Simple Perceptron Example
-# See: http://en.wikipedia.org/wiki/Perceptron
 load_library :vecmath
 
 class Perceptron
@@ -15,19 +13,16 @@ class Perceptron
   # Function to train the Perceptron
   # Weights are adjusted based on vehicle's error
   def train(forces, error)
-    @weights.each_index do |i|
-      @weights[i] += @c * error.x * forces[i].x
-      @weights[i] += @c * error.y * forces[i].y
-      @weights[i] = constrain(@weights[i], 0.0, 1.0)
-    end
+    trained = @weights.zip(forces.map{|f| f.to_a}
+    .map{|a, b| (a * error.x + b * error.y) * @c})
+    .map {|w, c| constrain(w + c, 0.0, 1.0)}
+    @weights = trained    
   end
 
   # Give me a steering result
   def feedforward(forces)
     # Sum all values
-    mult = []
-    forces.zip(@weights).each{|a, b| mult << a * b}
-    mult.inject(Vec2D.new){|c, d| c + d}
+    forces.zip(@weights).map{|a, b| a * b}.inject(Vec2D.new){|c, d| c + d}
   end
 end
 
@@ -38,7 +33,8 @@ class Vehicle
   
   MAX_SPEED = 4
   MAX_FORCE = 0.1
-  attr_reader :brain, :sz
+  attr_reader :brain, :sz, :location, :targets, :desired  
+  attr_reader :maxforce_squared, :maxspeed_squared
   
   def initialize(n, x, y)
     @brain = Perceptron.new(n, 0.001)
@@ -55,13 +51,13 @@ class Vehicle
     # Update velocity
     @velocity += @acceleration
     # Limit speed
-    @velocity.set_mag(MAX_SPEED) if @velocity.mag_squared > @maxspeed_squared
+    @velocity.set_mag(MAX_SPEED) if @velocity.mag_squared > maxspeed_squared
     @location += @velocity
     # Reset acceleration to 0 each cycle
     @acceleration *= 0
 
-    @location.x = constrain(@location.x, 0, width)
-    @location.y = constrain(@location.y, 0, height)
+    @location.x = constrain(location.x, 0, width)
+    @location.y = constrain(location.y, 0, height)
   end
 
   def apply_force(force)
@@ -72,7 +68,7 @@ class Vehicle
   # Here is where the brain processes everything
   def steer(targets, desired)
     # Steer towards all targets
-    forces = Array.new(targets.size){ |i| seek(targets[i]) }
+    forces = targets.map{|target| seek(target) }
 
     # That array of forces is the input to the brain
     result = brain.feedforward(forces)
@@ -81,21 +77,21 @@ class Vehicle
     apply_force(result)
 
     # Train the brain according to the error
-    error = desired - @location
+    error = desired - location
     brain.train(forces, error)
    end
 
   # A method that calculates a steering force towards a target
   # STEER = DESIRED MINUS VELOCITY
   def seek(target)
-    desired = target - @location  # A vector pointing from the location to the target
+    desired = target - location  # A vector pointing from the location to the target
 
     # Normalize desired and scale to the maximum speed
     desired.normalize!
     desired *= MAX_SPEED
     # Steering = Desired minus velocity
     steer = desired - @velocity
-    steer.set_mag(MAX_FORCE) if steer.mag_squared > @maxforce_squared # Limit to a maximum steering force
+    steer.set_mag(MAX_FORCE) if steer.mag_squared > maxforce_squared # Limit to a maximum steering force
     steer
   end
 
@@ -107,7 +103,7 @@ class Vehicle
     stroke(0)
     stroke_weight(1)
     push_matrix
-    translate(@location.x, @location.y)
+    translate(location.x, location.y)
     rotate(theta)
     begin_shape
     vertex(0, -sz)
@@ -119,6 +115,8 @@ class Vehicle
 end
 
 # A Vehicle controlled by a Perceptron
+attr_reader :targets, :desired, :v
+
 
 def setup
   size(640, 360)
@@ -130,7 +128,7 @@ def setup
 
   # Create the Vehicle (it has to know about the number of targets
   # in order to configure its brain)
-  @v = Vehicle.new(@targets.size, rand(width), rand(height))
+  @v = Vehicle.new(targets.size, rand(width), rand(height))
 end
 
 # Make a random ArrayList of targets to steer towards
@@ -145,10 +143,10 @@ def draw
   stroke(0)
   stroke_weight(2)
   fill(0, 100)
-  ellipse(@desired.x, @desired.y, 36, 36)
+  ellipse(desired.x, desired.y, 36, 36)
 
   # Draw the targets
-  @targets.each do |target|
+  targets.each do |target|
     no_fill
     stroke(0)
     stroke_weight(2)
@@ -158,9 +156,9 @@ def draw
   end
 
   # Update the Vehicle
-  @v.steer(@targets, @desired)
-  @v.update(width, height)
-  @v.display
+  v.steer(targets, desired)
+  v.update(width, height)
+  v.display
 end
 
 def mouse_pressed
