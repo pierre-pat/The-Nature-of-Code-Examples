@@ -20,7 +20,7 @@ class Network
   end
   
   # We can connection two Neurons
-  def connect(a, b, weight)
+  def connect(a, b, weight = 0.5)
     c = Connection.new(a, b, weight)
     a.join(c)
     # Also add them to the network
