@@ -7,7 +7,7 @@ attr_reader :network
 
 def setup
   size(640, 360) 
-  @network = LayeredNetwork.new(4, 3, 1)
+  @network = StaticNetwork.new(4, 3, 1)
 end
 
 def draw

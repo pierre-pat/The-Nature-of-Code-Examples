@@ -2,7 +2,7 @@
 # Daniel Shiffman
 # http://natureofcode.com
 
-class LayeredNetwork
+class StaticNetwork
   include Processing::Proxy
   attr_reader :neurons, :location
   
@@ -34,8 +34,7 @@ class LayeredNetwork
     end 
     neurons << output
   end
-
-
+  
   def display
     push_matrix
     translate(location.x, location.y)
