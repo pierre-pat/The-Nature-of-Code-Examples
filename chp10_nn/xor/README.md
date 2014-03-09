@@ -1,6 +1,7 @@
-**Building the Libary
+Building the nn Library
+===================
 
-You will need to use jruby to run the Rakefile
+You will need to use jruby to run the included Rakefile
 
 `jruby -S rake`
 
