@@ -11,7 +11,7 @@ include_package 'nn'
 
 ITERATIONS_PER_FRAME = 5
 
-attr_reader :inputs, :nn, :count, :land, :theta, :f
+attr_reader :inputs, :nn, :count, :land, :theta, :f, :result, :known
 
 
 def setup
@@ -29,7 +29,7 @@ def setup
   inputs << [1.0, 0]
   inputs << [0, 1.0] 
   inputs << [1.0, 1.0] 
-  inputs << [0, 0]
+  inputs << [0, 0.0]
 end
 
 def draw  
@@ -37,10 +37,10 @@ def draw
   ITERATIONS_PER_FRAME.times do |i|
     inp = inputs.sample
     # Compute XOR    
-    known = ((inp[0] == 1.0 && inp[1] == 1.0) || (inp[0] == 0 && inp[1] == 0))? 0 : 1.0 
+    @known = ((inp[0] == 1.0 && inp[1] == 1.0) || (inp[0] == 0 && inp[1] == 0))? 0 : 1.0 
     
     # Train that sucker!
-    result = nn.train(inp, known)
+    @result = nn.train(inp, known)
     @count += 1
   end 
   
@@ -48,8 +48,8 @@ def draw
   background(175)
   push_matrix
   translate(width / 2, height / 2 + 20,-160)
-  rotate_x(-Math::PI / 3)
-  rotate_z(theta + Math::PI / 3)
+  rotate_x(Math::PI / 3)
+  rotate_z(theta)
   
   # Put a little BOX on screen
   push_matrix
@@ -67,28 +67,20 @@ def draw
   pop_matrix
   
   # Display overal neural net stats
-  #network_status  
+  network_status  
 end  
 
 def network_status
-  mse = 0.0
-  
+  mse = 0.0  
   text_font(f)
   fill(0)
   text("Your friendly neighborhood neural network solving XOR.", 10, 20)
   text("Total iterations: #{count}", 10, 40)
-  
-  inputs.each do |inp|    
-    known = ((inp[0] == 1.0 && inp[1] == 1.0) || (inp[0] == 0 && inp[1] == 0))? 0 : 1.0 
-    result = nn.feedForward(inp)     
-    puts "For: #{inp[0]} #{inp[1]} : #{format("%.5f", result)}"
-    mse += (result - known) * (result - known)    
-  end
+  mse += (result - known) * (result - known)    
   rmse = Math::sqrt(mse / 4.0)
   out = "Root mean squared error: #{format("%.5f", rmse)}"
-  #text(out, 10, 60)
-  puts out
-  
+  text(out, 10, 60) 
 end
+
 
 
