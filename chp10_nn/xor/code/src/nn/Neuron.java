@@ -71,7 +71,7 @@ public class Neuron {
         return 1.0f / (1.0f + (float) Math.exp(-x));
     }
 
-    public ArrayList getConnections() {
+    public ArrayList<Connection> getConnections() {
         return connections;
     }
 

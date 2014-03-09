@@ -97,9 +97,9 @@ public class Network {
         // BACKPROPOGATION
         // This is easier b/c we just have one output
         // Apply Delta to connections between hidden and output
-        ArrayList connections = output.getConnections();
+        ArrayList<Connection> connections = output.getConnections();
         for (int i = 0; i < connections.size(); i++) {
-            Connection c = (Connection) connections.get(i);
+            Connection c = connections.get(i);
             Neuron neuron = c.getFrom();
             float temp_output = neuron.getOutput();
             float deltaWeight = temp_output*deltaOutput;
