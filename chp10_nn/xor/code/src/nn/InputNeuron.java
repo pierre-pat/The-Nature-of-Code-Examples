@@ -16,7 +16,7 @@ public class InputNeuron extends Neuron {
         super(i);
     }
 
-    public void input(float d) {
+    public void input(double d) {
         output = d;
     }
 

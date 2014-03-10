@@ -10,17 +10,17 @@ public class Connection {
 
     private final Neuron from;     // Connection goes from. . .
     private final Neuron to;       // To. . .
-    private float weight;   // Weight of the connection. . .
+    private double weight;   // Weight of the connection. . .
 
     // Constructor  builds a connection with a random weight
     public Connection(Neuron a_, Neuron b_) {
         from = a_;
         to = b_;
-        weight = (float) Math.random()*2-1;
+        weight = Math.random()*2-1;
     }
     
     // In case I want to set the weights manually, using this for testing
-    public Connection(Neuron a_, Neuron b_, float w) {
+    public Connection(Neuron a_, Neuron b_, double w) {
         from = a_;
         to = b_;
         weight = w;
@@ -34,12 +34,12 @@ public class Connection {
         return to;
     }  
     
-    public float getWeight() {
+    public double getWeight() {
         return weight;
     }
 
     // Changing the weight of the connection
-    public void adjustWeight(float deltaWeight) {
+    public void adjustWeight(double deltaWeight) {
         weight += deltaWeight;
     }
 

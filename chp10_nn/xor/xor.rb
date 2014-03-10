@@ -16,13 +16,13 @@ attr_reader :inputs, :nn, :count, :land, :theta, :f, :result, :known
 
 def setup
   
-  size(400,400,P3D)
+  size(400, 400, P3D)
   @theta = 0.0
   # Create a landscape object
-  @land = Landscape.new(20,300,300)
-  @f = createFont("Courier",12,true)
+  @land = Landscape.new(20, 300, 300)
+  @f = create_font("Courier", 12, true)
   
-  @nn = Network.new(2,4)
+  @nn = Network.new(2, 4)
   @count = 0
   # Create a list of 4 training inputs
   @inputs = []
@@ -33,11 +33,11 @@ def setup
 end
 
 def draw  
-  
+  lights  
   ITERATIONS_PER_FRAME.times do |i|
     inp = inputs.sample
     # Compute XOR    
-    @known = ((inp[0] == 1.0 && inp[1] == 1.0) || (inp[0] == 0 && inp[1] == 0))? 0 : 1.0 
+    @known = ((inp[0] > 0.0 && inp[1] > 0.0) || (inp[0] < 1.0 && inp[1] < 1.0))? 0 : 1.0 
     
     # Train that sucker!
     @result = nn.train(inp, known)
@@ -47,7 +47,7 @@ def draw
   # Ok, visualize the solution space
   background(175)
   push_matrix
-  translate(width / 2, height / 2 + 20,-160)
+  translate(width / 2, height / 2 + 20, -160)
   rotate_x(Math::PI / 3)
   rotate_z(theta)
   
@@ -79,7 +79,9 @@ def network_status
   mse += (result - known) * (result - known)    
   rmse = Math::sqrt(mse / 4.0)
   out = "Root mean squared error: #{format("%.5f", rmse)}"
+  hint DISABLE_DEPTH_SORT
   text(out, 10, 60) 
+  hint ENABLE_DEPTH_SORT
 end
 
 

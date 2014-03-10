@@ -20,29 +20,30 @@ class Landscape
   end
   
   
-  # Calculate height values (based off a neural netork)
+  # Calculate height values (based off a neural network)
   def calculate(nn)
     x = 0.0
     dx = 1.0 / cols
-    cols.times do |i|
+    temp = []
+    (0 ... cols).each do |i|
+      tmp = []
       y = 0.0
       dy = 1.0 / rows
-      rows.times do |j| 
-        result = nn.feed_forward([x, y])
-        z[i][j] = z[i][j] * 0.95 + 0.05 * (result * 280.0 - 140.0)
+      (0 ... rows).each do |j| 
+	      tmp << z[i][j] * 0.95 + 0.05 * (nn.feed_forward([x, y]) * 280.0 - 140.0)
         y += dy
       end
+      temp << tmp
       x += dx
     end
-    
+    @z = temp.clone
   end
   
   # Render landscape as grid of quads
   def render
     # Every cell is an individual quad
     # (could use quad_strip here, but produces funny results, investigate this)
-    (0 ... z.size - 1).each do |x|
-      
+    (0 ... z.size - 1).each do |x|      
       (0 ... z[0].size - 1).each do |y|
         
         # one quad at a time
