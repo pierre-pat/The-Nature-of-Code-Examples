@@ -66,11 +66,11 @@ public class Network {
     }
 
 
-    public double feedForward(double[] input_arrayVals) {
+    public double feedForward(double[] inputVals) {
         
         // Feed the input_array with an array of inputs
-        for (int i = 0; i < input_arrayVals.length; i++) {
-            input_array[i].input_array(input_arrayVals[i]);  
+        for (int i = 0; i < inputVals.length; i++) {
+            input_array[i].input(inputVals[i]);  
         }
         
         // Have the hidden_array layer calculate its output
@@ -91,7 +91,7 @@ public class Network {
         
         // This is where the error correction all starts
         // Derivative of sigmoid output function * diff between known and guess
-        double deltaOutput = result*(1-result) * (answer-result);
+        double deltaOutput = result * (1 - result) * (answer - result);
 
         
         // BACKPROPOGATION
@@ -102,36 +102,35 @@ public class Network {
             Connection c = connections.get(i);
             Neuron neuron = c.getFrom();
             double temp_output = neuron.getOutput();
-            double deltaWeight = temp_output*deltaOutput;
-            c.adjustWeight(LEARNING_CONSTANT*deltaWeight);
+            double deltaWeight = temp_output * deltaOutput;
+            c.adjustWeight(LEARNING_CONSTANT * deltaWeight);
         }
         for (HiddenNeuron hidden : hidden_array) {
             connections = hidden.getConnections();
             double sum  = 0;
             // Sum output delta * hidden_array layer connections (just one output)
             for (int j = 0; j < connections.size(); j++) {
-                Connection c = (Connection) connections.get(j);
+                Connection c = connections.get(j);
                 // Is this a connection from hidden_array layer to next layer (output)?
                 if (c.getFrom() == hidden) {
-                    sum += c.getWeight()*deltaOutput;
+                    sum += c.getWeight() * deltaOutput;
                 }
             }    
             // Then adjust the weights coming in based:
             // Above sum * derivative of sigmoid output function for hidden_array neurons
             for (int j = 0; j < connections.size(); j++) {
-                Connection c = (Connection) connections.get(j);
+                Connection c = connections.get(j);
                 // Is this a connection from previous layer (input_array) to hidden_array layer?
                 if (c.getTo() == hidden) {
                     double temp_output = hidden.getOutput();
                     double deltaHidden = temp_output * (1 - temp_output);  // Derivative of sigmoid(x)
                     deltaHidden *= sum;   // Would sum for all outputs if more than one output
                     Neuron neuron = c.getFrom();
-                    double deltaWeight = neuron.getOutput()*deltaHidden;
-                    c.adjustWeight(LEARNING_CONSTANT*deltaWeight);
+                    double deltaWeight = neuron.getOutput() * deltaHidden;
+                    c.adjustWeight(LEARNING_CONSTANT * deltaWeight);
                 }
             } 
         }
-
         return result;
     }
 }
