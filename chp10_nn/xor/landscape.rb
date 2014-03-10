@@ -33,7 +33,7 @@ class Landscape
 	      tmp << z[i][j] * 0.95 + 0.05 * (nn.feed_forward([x, y]) * 280.0 - 140.0)
         y += dy
       end
-      temp << tmp
+      temp << tmp.clone
       x += dx
     end
     @z = temp.clone
