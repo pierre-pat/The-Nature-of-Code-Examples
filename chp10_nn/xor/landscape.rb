@@ -22,21 +22,12 @@ class Landscape
   
   # Calculate height values (based off a neural network)
   def calculate(nn)
-    x = 0.0
-    dx = 1.0 / cols
-    temp = []
-    (0 ... cols).each do |i|
-      tmp = []
-      y = 0.0
-      dy = 1.0 / rows
-      (0 ... rows).each do |j| 
-	      tmp << z[i][j] * 0.95 + 0.05 * (nn.feed_forward([x, y]) * 280.0 - 140.0)
-        y += dy
-      end
-      temp << tmp.clone
-      x += dx
-    end
-    @z = temp.clone
+    val = ->(curr, nn, x, y){curr * 0.95 + 0.05 *  (nn.feed_forward([x, y]) * 280.0 - 140.0)} 
+    @z = (0 ... cols).map{|i|
+      (0 ... rows).map{|j| 
+	      val.call(z[i][j], nn, i * 1.0/ cols, j * 1.0/cols)
+      }      
+    }   
   end
   
   # Render landscape as grid of quads
@@ -52,19 +43,19 @@ class Landscape
         no_stroke
         push_matrix
         begin_shape(QUADS)
-        translate(x * scl - w * 0.5, y * scl - h * 0.5, 0)
-        fill(z[x][y]+127, 220)
-        vertex(0, 0, z[x][y])
-        fill(z[x+1][y]+127, 220)
-        vertex(scl, 0, z[x+1][y])
-        fill(z[x+1][y+1]+127, 220)
-        vertex(scl, scl, z[x+1][y+1])
-        fill(z[x][y+1]+127, 220)
-        vertex(0, scl, z[x][y+1])
-        end_shape
-        pop_matrix
+          translate(x * scl - w * 0.5, y * scl - h * 0.5, 0)
+          fill(z[x][y]+127, 220)
+          vertex(0, 0, z[x][y])
+          fill(z[x+1][y]+127, 220)
+          vertex(scl, 0, z[x+1][y])
+          fill(z[x+1][y+1]+127, 220)
+          vertex(scl, scl, z[x+1][y+1])
+          fill(z[x][y+1]+127, 220)
+          vertex(0, scl, z[x][y+1])
+          end_shape
+          pop_matrix
+        end
       end
     end
   end
-end
 
