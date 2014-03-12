@@ -16,7 +16,7 @@ class Network
   end
   
   # We can add a Neuron
-  def addNeuron(n)
+  def add_neuron(n)
     neurons << n
   end
   

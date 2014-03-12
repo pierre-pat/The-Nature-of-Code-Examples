@@ -1,6 +1,6 @@
 # Daniel Shiffman
 # The Nature of Code
-# http:#natureofcode.com
+# http://natureofcode.com
 
 # An animated drawing of a Neural Network
 
@@ -56,7 +56,7 @@ class Neuron
   def display
     stroke(0)
     stroke_weight(1)
-    # Brightness is mapped to sum
+    # Brightness is mapped to sum (NB: processing map function here)
     b = map(sum, 0, 1, 255, 0)
     fill(b)
     ellipse(xpos, ypos, r, r)

@@ -1,6 +1,6 @@
 # The Nature of Code
 # Daniel Shiffman
-# http:#natureofcode.com
+# http://natureofcode.com
 
 # An animated drawing of a Neural Network
 
@@ -9,13 +9,11 @@ class Connection
   # Connection is from A to B
   attr_reader :a, :b, :weight, :sending, :sender, :output
   
-  # Need to store the output for when its time to pass along
-  @output = 0
-  
   def initialize(from, to, w)
     @weight, @a, @b = w, from, to
     @sending = false
     @sender = Vec2D.new
+    @output = 0
   end
   
   

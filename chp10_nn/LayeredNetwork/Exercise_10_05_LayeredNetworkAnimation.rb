@@ -30,10 +30,10 @@ def setup
       if (i == layers-1)
         network.connect(n, output, rand)
       end
-      network.addNeuron(n)
+      network.add_neuron(n)
     end
   end
-  network.addNeuron(output)
+  network.add_neuron(output)
 end
 
 def draw
