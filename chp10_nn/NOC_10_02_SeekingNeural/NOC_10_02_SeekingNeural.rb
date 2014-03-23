@@ -22,7 +22,7 @@ class Perceptron
   # Give me a steering result
   def feedforward(forces)
     # Sum all values
-    forces.zip(@weights).map{|a, b| a * b}.inject(Vec2D.new){|c, d| c + d}
+    forces.zip(@weights).map{|a, b| a * b}.inject(Vec2D.new, :+)
   end
 end
 
