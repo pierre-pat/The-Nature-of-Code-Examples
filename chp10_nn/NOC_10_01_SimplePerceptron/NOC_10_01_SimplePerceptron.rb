@@ -30,7 +30,7 @@ class Perceptron
   # Guess -1 or 1 based on input values
   def feedforward(inputs)
     # Sum all values
-    sum = @weights.zip(inputs).map{|a, b| a * b}.inject(0){|c, d| c + d}
+    sum = @weights.zip(inputs).map{|a, b| a * b}.inject(0, :+)
     # Result is sign of the sum, -1 or 1
     activate(sum)
   end
