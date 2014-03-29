@@ -46,12 +46,12 @@ class Network
   
   # Draw everything
   def display
-    pushMatrix
+    push_matrix
     translate(location.x, location.y)
     neurons.each {|n| n.display}
     
     connections.each {|c| c.display}
-    popMatrix
+    pop_matrix
   end
 end
 
