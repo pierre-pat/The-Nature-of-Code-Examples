@@ -53,7 +53,7 @@ module SeekingNeural
       # Update velocity
       @velocity += @acceleration
       # Limit speed
-      @velocity.set_mag(MAX_SPEED) if @velocity.mag_squared > maxspeed_squared
+      @velocity.set_mag(MAX_SPEED){@velocity.mag_squared > maxspeed_squared}
       @location += @velocity
       # Reset acceleration to 0 each cycle
       @acceleration *= 0
@@ -93,7 +93,7 @@ module SeekingNeural
       desired *= MAX_SPEED
       # Steering = Desired minus velocity
       steer = desired - @velocity
-      steer.set_mag(MAX_FORCE) if steer.mag_squared > maxforce_squared # Limit to a maximum steering force
+      steer.set_mag(MAX_FORCE){steer.mag_squared > maxforce_squared} # Limit to a maximum steering force
       steer
     end
     
