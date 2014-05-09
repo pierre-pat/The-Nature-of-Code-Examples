@@ -1,22 +1,24 @@
 # The Nature of Code
 # http://natureofcode.com
 
+load_library :vecmath
+
 class Mover
   def initialize(width, height)
-    @location = PVector.new(rand(width/2), rand(height/2))
-    @velocity = PVector.new(0, 0)
+    @location = Vec2D.new(rand(width/2.0), rand(height/2.0))
+    @velocity = Vec2D.new(0, 0)
     @topspeed = 6
   end
 
   def update
-    mouse = PVector.new(mouse_x, mouse_y)
-    acceleration = PVector.sub(mouse, @location)
-    acceleration.normalize
-    acceleration.mult(0.2)
+    mouse = Vec2D.new(mouse_x, mouse_y)
+    acceleration = mouse - @location
+    acceleration.normalize!
+    acceleration *= 0.2
 
-    @velocity.add(acceleration)
-    @velocity.limit(@topspeed)
-    @location.add(@velocity)
+    @velocity += acceleration
+    @velocity.set_mag(@topspeed) {@velocity.mag_squared > @topspeed**2}
+    @location += @velocity
   end
 
   def display

@@ -9,7 +9,7 @@ class Mover
   attr_reader :location, :velocity, :topspeed_squared
   
   def initialize(width, height)
-    @location = Vec2D.new(rand(width/2), rand(height/2))
+    @location = Vec2D.new(rand(width/2.0), rand(height/2.0))
     @velocity = Vec2D.new(0, 0)
     @topspeed_squared = TOP_SPEED * TOP_SPEED
   end
@@ -21,7 +21,7 @@ class Mover
     acceleration *= 0.2
 
     @velocity += acceleration
-    velocity.set_mag(TOP_SPEED) if velocity.mag_squared > topspeed_squared
+    velocity.set_mag(TOP_SPEED) {velocity.mag_squared > topspeed_squared}
     @location += velocity
   end
 

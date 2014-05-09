@@ -1,20 +1,24 @@
 # The Nature of Code
 # http://natureofcode.com
 
+load_library :vecmath
+
 class Mover
+  attr_reader :height, :width
   def initialize(width, height)
-    @location = PVector.new(rand(width/2), rand(height/2))
-    @velocity = PVector.new(0, 0)
+    @width, @height = width, height
+    @location = Vec2D.new(rand(width/2.0), rand(height/2.0))
+    @velocity = Vec2D.new(0, 0)
     @topspeed = 6
   end
 
   def update
-    acceleration = PVector.new(rand, rand)
-    acceleration.mult(rand(2))
+    acceleration = Vec2D.new(rand, rand)
+    acceleration *= rand(0 .. 2.0)
 
-    @velocity.add(acceleration)
-    @velocity.limit(@topspeed)
-    @location.add(@velocity)
+    @velocity += acceleration
+    @velocity.set_mag(@topspeed) {@velocity.mag_squared > @topspeed**2}
+    @location += @velocity
   end
 
   def display
@@ -24,7 +28,7 @@ class Mover
     ellipse(@location.x, @location.y, 48, 48)
   end
 
-  def check_edges(width, height)
+  def check_edges
     if @location.x > width
       @location.x = 0
     elsif @location.x < 0
@@ -49,6 +53,6 @@ def draw
   background(255)
 
   @mover.update
-  @mover.check_edges(width, height)
+  @mover.check_edges
   @mover.display
 end

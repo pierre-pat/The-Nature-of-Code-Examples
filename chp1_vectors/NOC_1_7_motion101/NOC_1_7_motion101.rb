@@ -1,15 +1,17 @@
 # The Nature of Code
 # http://natureofcode.com
 
+load_library :vecmath
+
 class Mover
 
   def initialize(width, height)
-    @location = PVector.new(rand(width/2), rand(height/2))
-    @velocity = PVector.new(random(-2, 2), random(-2, 2))
+    @location = Vec2D.new(rand(width/2.0), rand(height/2.0))
+    @velocity = Vec2D.new(random(-2.0, 2.0), random(-2.0, 2.0))
   end
 
   def update
-    @location.add(@velocity)
+    @location += @velocity
   end
 
   def display
