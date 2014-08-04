@@ -68,7 +68,7 @@ class Pendulum
     # we assign that angle to the pendulum
     if @dragging
       diff = PVector.sub(@origin, PVector.new(mouse_x, mouse_y))
-      @angle = atan2(-1*diff.y, diff.x) - radians(90)   # Angle relative to vertical axis
+      @angle = atan2(-1*diff.y, diff.x) - 90.radians   # Angle relative to vertical axis
     end
   end
 end

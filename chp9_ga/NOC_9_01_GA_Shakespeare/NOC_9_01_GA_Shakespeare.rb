@@ -17,7 +17,7 @@ class DNA
   attr_reader :genes
 
   def initialize(num)
-    @genes = Array.new(num) { random(32, 128).to_i.chr }
+    @genes = Array.new(num) { rand(32, 128).to_i.chr }
   end
 
   # Converts character array to a String
@@ -40,7 +40,7 @@ class DNA
     # A new child
     child = DNA.new(@genes.size)
 
-    midpoint = random(@genes.size).to_i # Pick a midpoint
+    midpoint = rand(@genes.size).to_i # Pick a midpoint
 
     # Half from one, half from the other
     @genes.each_with_index do |c, i|
@@ -53,9 +53,9 @@ class DNA
     child
   end
 
-  # Based on a mutation probability, picks a new random character
+  # Based on a mutation probability, picks a new rand character
   def mutate(mutation_rate)
-    @genes.map!{ |c| random(1) < mutation_rate ? random(32, 128).to_i.chr : c }
+    @genes.map!{ |c| rand(1) < mutation_rate ? rand(32, 128).to_i.chr : c }
   end
 
   def to_s
@@ -100,7 +100,7 @@ class Population
     @population.each do |p|
       fitness = map(p.fitness(@target), 0, max_fitness, 0, 1)
       n = (fitness * 100).to_i      # Arbitrary multiplier, we can also use monte carlo method
-      n.times{ @mating_pool << p }  # and pick two random numbers
+      n.times{ @mating_pool << p }  # and pick two rand numbers
     end
   end
 
@@ -108,10 +108,10 @@ class Population
   def generate
     # Refill the population with children from the mating pool
     @population.each_index do |i|
-      a = random(@mating_pool.size).to_i
-      b = random(@mating_pool.size).to_i
-      partner_a = @mating_pool[random(@mating_pool.size).to_i]
-      partner_b = @mating_pool[random(@mating_pool.size).to_i]
+      a = rand(@mating_pool.size).to_i
+      b = rand(@mating_pool.size).to_i
+      partner_a = @mating_pool[rand(@mating_pool.size).to_i]
+      partner_b = @mating_pool[rand(@mating_pool.size).to_i]
       child = partner_a.crossover(partner_b)
       child.mutate(@mutation_rate)
       @population[i] = child
@@ -145,7 +145,7 @@ end
 # setup()
 #  # Step 1: The Population
 #    # Create an empty population (an array or ArrayList)
-#    # Fill it with DNA encoded objects (pick random values to start)
+#    # Fill it with DNA encoded objects (pick rand values to start)
 
 # draw()
 #  # Step 1: Selection

@@ -88,7 +88,7 @@ def setup
   @ruleset = []
   @ruleset << Rule.new('F', "FF+[+F-F-F]-[-F+F+F]")
   @lsys = LSystem.new("F", @ruleset)
-  @turtle = Turtle.new(@lsys.sentence, height/3, radians(25))
+  @turtle = Turtle.new(@lsys.sentence, height/3, 25.radians)
 
   @counter = 0
   smooth

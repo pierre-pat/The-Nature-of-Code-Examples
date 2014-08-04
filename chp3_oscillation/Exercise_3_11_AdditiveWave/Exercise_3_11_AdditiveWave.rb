@@ -13,11 +13,11 @@ def setup
   @theta = 0.0
 
   @amplitudes = Array.new(@maxwaves) do |amplitude| # Height of wave
-    amplitude = random(10,30)
+    amplitude = rand(10 .. 30)
   end
 
   @dx = Array.new(@maxwaves) do |x|     # Value for incrementing X, to be calculated as a function of period and xspacing
-    period = random(100,300)            # How many pixels before the wave repeats
+    period = rand(100 .. 300)            # How many pixels before the wave repeats
     (TWO_PI / period) * @xspacing
   end
 

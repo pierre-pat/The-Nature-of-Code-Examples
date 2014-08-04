@@ -66,7 +66,7 @@ end
 
 def setup
   size(640, 360)
-  @movers = Array.new(20)  { Mover.new(random(1, 2), random(width), random(height)) }
+  @movers = Array.new(20)  { Mover.new(rand(1.0 .. 2), rand(width), rand(height)) }
 end
 
 def draw

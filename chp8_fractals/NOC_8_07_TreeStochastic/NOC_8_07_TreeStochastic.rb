@@ -2,7 +2,7 @@
 # NOC_8_07_TreeStochastic
 # Stochastic Tree
 # Renders a simple tree-like structure via recursion
-# Angles and number of branches are random
+# Angles and number of branches are rand
 
 def setup
   size(800, 200)
@@ -49,11 +49,11 @@ def branch(h)
   # All recursive functions must have an exit condition!!!!
   # Here, ours is when the length of the branch is 2 pixels or less
   if h > 2
-    # A random number of branches
-    n = random(1, 4).to_i
+    # A rand number of branches
+    n = rand(1.0 .. 4).to_i
     n.times do
-      # Picking a random angle
-      theta = random(-PI/2, PI/2)
+      # Picking a rand angle
+      theta = rand(-PI / 2 ..  PI/2)
       push_matrix      # Save the current state of transformation (i.e. where are we now)
       rotate(theta)    # Rotate by theta
       branch(h)        # Ok, now call myself to branch again

@@ -16,7 +16,7 @@ class CA
   end
 
   def randomize
-    @rulset = Array.new(@ruleset.size){ random(2) }
+    @rulset = Array.new(@ruleset.size){ rand(2) }
   end
 
   def generate

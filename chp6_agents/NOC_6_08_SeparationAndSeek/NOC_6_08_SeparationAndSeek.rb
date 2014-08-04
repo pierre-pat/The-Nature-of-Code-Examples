@@ -90,7 +90,7 @@ end
 
 def setup
   size(640, 360)
-  @vehicles = Array.new(100) { Vehicle.new(random(width), random(height)) }
+  @vehicles = Array.new(100) { Vehicle.new(rand(width), rand(height)) }
 end
 
 def draw

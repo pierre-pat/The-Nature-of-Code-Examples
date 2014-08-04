@@ -95,7 +95,7 @@ class Vehicle
 
   def display
     # draw a triangle rotated in the direction of the velocity
-    theta = @velocity.heading2D + radians(90)
+    theta = @velocity.heading2D + 90,radians
     fill(175)
     stroke(0)
     push_matrix

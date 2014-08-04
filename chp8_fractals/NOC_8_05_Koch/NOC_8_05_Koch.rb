@@ -27,7 +27,7 @@ class KochLine
     p = @a.get
     p.add(v)
 
-    rotate_line(v,-radians(60))
+    rotate_line(v,-60.radians)
     p.add(v)
     p
   end

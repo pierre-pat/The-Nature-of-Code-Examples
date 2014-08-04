@@ -14,7 +14,7 @@ class Particle
   end
 
   def display
-    fill(random(255))
+    fill(rand(255))
     ellipse(@location.x, @location.y, 16, 16)
   end
 end

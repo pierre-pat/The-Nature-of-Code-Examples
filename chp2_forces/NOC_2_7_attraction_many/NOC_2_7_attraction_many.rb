@@ -98,7 +98,7 @@ end
 # NOC_2_7_attraction_many
 def setup
   size(640, 360)
-  @movers = Array.new(10) { Mover.new(random(width), random(height), random(0.1, 2)) }
+  @movers = Array.new(10) { Mover.new(rand(width), rand(height), rand(0.1 .. 2)) }
   @attractor = Attractor.new(width, height)
 end
 

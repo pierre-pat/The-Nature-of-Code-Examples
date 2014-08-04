@@ -11,7 +11,7 @@ class GOL
 
   def init
     @board = Array.new(@cols) do
-      Array.new(@rows) { random(2).to_i }
+      Array.new(@rows) { rand(2).to_i }
     end
   end
 

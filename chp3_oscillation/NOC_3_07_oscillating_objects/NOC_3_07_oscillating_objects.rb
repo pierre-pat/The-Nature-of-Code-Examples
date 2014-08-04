@@ -6,8 +6,8 @@ class Oscillator
 
   def initialize(width, height)
     @angle = PVector.new
-    @velocity = PVector.new(random(-0.05, 0.05), random(-0.05, 0.05))
-    @amplitude = PVector.new(random(20, width/2), random(20, height/2))
+    @velocity = PVector.new(rand(-0.05, 0.05), rand(-0.05, 0.05))
+    @amplitude = PVector.new(rand(20 ..  width/2), rand(20 ..  height/2))
   end
 
   def oscillate

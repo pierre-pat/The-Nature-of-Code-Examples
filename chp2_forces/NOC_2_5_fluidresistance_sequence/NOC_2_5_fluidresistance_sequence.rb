@@ -132,6 +132,6 @@ end
 def reset
   @movers = Array.new(5)
   @movers.each_index do |i|
-    @movers[i] = Mover.new(random(0.5*2.25, 3*2.25), 20*2.25+i*40*2.25, 0)
+    @movers[i] = Mover.new(rand(0.5*2.25, 3*2.25), 20*2.25+i*40*2.25, 0)
   end
 end

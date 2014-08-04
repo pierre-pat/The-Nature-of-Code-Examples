@@ -51,7 +51,7 @@ end
 def setup
   size(383, 200)
   random_seed(1)
-  @movers = Array.new(15) { Mover.new(random(1, 4), rand(width), 0) }
+  @movers = Array.new(15) { Mover.new(rand(1.0 .. 4), rand(width), 0) }
 end
 
 def draw

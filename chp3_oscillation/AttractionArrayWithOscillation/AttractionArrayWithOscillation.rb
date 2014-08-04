@@ -30,9 +30,9 @@ class Crawler
 
   def initialize(width, height)
     @acc = PVector.new
-    @vel = PVector.new(random(-1, 1), random(-1, 1))
-    @loc = PVector.new(random(width), random(height))
-    @mass = random(8, 16)
+    @vel = PVector.new(rand(-1.0 .. 1), rand(-1.0 .. 1))
+    @loc = PVector.new(rand(width), rand(height))
+    @mass = rand(8 ..  16)
     @osc = Oscillator.new(@mass*2)
   end
 
@@ -139,7 +139,7 @@ end
 # AttractionArrayWithOscillation
 def setup
   size(640, 360)
-  # Some random bodies
+  # Some rand bodies
   @crawlers = Array.new(5){ Crawler.new(width, height) }
   # Create an attractive body
   @a = Attractor.new(PVector.new(width/2, height/2), 20, 0.4)

@@ -49,7 +49,7 @@ end
 
 def setup
 size(800, 200)
-  @movers = Array.new(20) { Mover.new(random(0.1, 4), 0, 0) }
+  @movers = Array.new(20) { Mover.new(rand(0.1 .. 4), 0, 0) }
 end
 
 def draw

@@ -8,7 +8,7 @@ class Mover
   def initialize(m, x, y)
     @mass = m
     @location = PVector.new(x,y)
-    @velocity = PVector.new(random(-1, 1), random(-1, 1))
+    @velocity = PVector.new(rand(-1.0 .. 1), rand(-1.0 .. 1))
     @acceleration = PVector.new(0, 0)
     @angle = 0
 
@@ -75,7 +75,7 @@ end
 def setup
   size(800, 200)
   background(255)
-  @movers = Array.new(20) { Mover.new(random(0.1, 2), random(width), random(height)) }
+  @movers = Array.new(20) { Mover.new(rand(0.1 .. 2), rand(width), rand(height)) }
   @a = Attractor.new(width, height)
 end
 

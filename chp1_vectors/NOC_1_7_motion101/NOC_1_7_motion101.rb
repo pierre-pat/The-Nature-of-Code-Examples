@@ -7,7 +7,7 @@ class Mover
 
   def initialize(width, height)
     @location = Vec2D.new(rand(width/2.0), rand(height/2.0))
-    @velocity = Vec2D.new(random(-2.0, 2.0), random(-2.0, 2.0))
+    @velocity = Vec2D.new(rand(-2.0 .. 2.0), rand(-2.0 .. 2.0))
   end
 
   def update

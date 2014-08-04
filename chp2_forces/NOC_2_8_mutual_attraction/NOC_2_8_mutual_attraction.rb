@@ -48,7 +48,7 @@ end
 # NOC_2_8_mutual_attraction
 def setup
   size(800, 200)
-  @movers = Array.new(20) { Mover.new(random(width), random(height), random(0.1, 2)) }
+  @movers = Array.new(20) { Mover.new(rand(width), rand(height), rand(0.1 .. 2)) }
 end
 
 def draw

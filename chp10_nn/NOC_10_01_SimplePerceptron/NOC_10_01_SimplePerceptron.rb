@@ -74,7 +74,7 @@ def setup
   # Second value is "Learning Constant"
   @ptron = Perceptron.new(3, 0.00001)  # Learning Constant is low just b/c it's fun to watch, this is not necessarily optimal
 
-   #Create a random set of training points and calculate the "known" answer
+   #Create a rand set of training points and calculate the "known" answer
   @training = Array.new(2000) do
     x = rand(@xmin .. @xmax)
     y = rand(@ymin .. @ymax)

@@ -81,7 +81,7 @@ end
 def setup
   size(640, 360, P3D)
   background(255)
-  @movers = Array.new(10) { Mover.new(random(0.1, 2), random(-width/2, width/2), random(-height/2, height/2), random(-100, 100)) }
+  @movers = Array.new(10) { Mover.new(rand(0.1 .. 2), rand(-width/2 .. width/2), rand(-height/2 .. height/2), rand(-100 ..100)) }
   @attractor = Attractor.new
   @angle = 0
 end

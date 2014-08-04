@@ -6,7 +6,7 @@ class Particle
 
   def initialize(location, img)
     @acceleration = PVector.new(0, 0.05)
-    @velocity = PVector.new(random(-1, 1), random(-1, 0))
+    @velocity = PVector.new(rand(-1.0 .. 1), rand(-1 .. 0))
     @velocity.mult(2)
     @location = location.get
     @img = img

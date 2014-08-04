@@ -130,6 +130,6 @@ end
 def reset
   @movers = Array.new(9)
   @movers.each_index do |i|
-    @movers[i] = Mover.new(random(0.5, 3), 40+i*70, 0);
+    @movers[i] = Mover.new(rand(0.5, 3), 40+i*70, 0);
   end
 end

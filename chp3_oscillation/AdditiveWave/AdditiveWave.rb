@@ -14,9 +14,9 @@ def setup
   @xspacing = 8
   @maxwaves = 5
   @theta = 0.0
-  @amplitudes = Array.new(@maxwaves){ random(10, 30) }
+  @amplitudes = Array.new(@maxwaves){ rand(10 ..  30) }
   @dx = Array.new(@maxwaves) do |i|
-    period = random(100, 300)
+    period = rand(100, 300)
     (TWO_PI / period) * @xspacing
   end
 

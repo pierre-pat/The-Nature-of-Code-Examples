@@ -4,7 +4,7 @@ class Boid
   attr_reader :location, :velocity
   def initialize(x, y)
     @acceleration = PVector.new
-    @velocity = PVector.new(random(-1, -1), random(-1, -1))
+    @velocity = PVector.new(rand(-1.0 .. 1), rand(-1.0 .. 1))
     @location = PVector.new(x, y)
     @r = 3
     @maxspeed = 3
@@ -127,7 +127,7 @@ class Boid
   end
 
   def render
-    theta = @velocity.heading2D + radians(90)
+    theta = @velocity.heading2D + 90.radians
     fill(175)
     stroke(0)
     push_matrix

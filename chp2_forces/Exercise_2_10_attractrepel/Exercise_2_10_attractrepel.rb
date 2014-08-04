@@ -131,7 +131,7 @@ end
 def setup
   size(800, 200)
   @attractor = Attractor.new(width, height)
-  @movers = Array.new(20) { Mover.new(random(4, 12), random(width), random(height)) }
+  @movers = Array.new(20) { Mover.new(rand(4.0 .. 12), rand(width.to_f), rand(height.to_f)) }
 end
 
 def draw

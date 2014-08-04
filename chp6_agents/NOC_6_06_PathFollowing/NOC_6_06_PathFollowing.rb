@@ -124,7 +124,7 @@ class Vehicle
 
   def display
     # draw a triangle rotated in the direction of the velocity
-    theta = @velocity.heading2D + radians(90)
+    theta = @velocity.heading2D + 90.radians
     fill(175)
     stroke(0)
     push_matrix
@@ -174,8 +174,8 @@ end
 def new_path
   @path = Path.new
   @path.add_point(-20, height/2)
-  @path.add_point(random(0, width/2), random(0, height))
-  @path.add_point(random(width/2, width), random(0, height))
+  @path.add_point(rand(0 ..  width/2), rand(0 ..  height))
+  @path.add_point(rand(width / 2 ..  width), rand(0 ..  height))
   @path.add_point(width+20, height/2)
 end
 

@@ -7,7 +7,7 @@
 
 class DNA
   attr_reader :genes
-  # Constructor (makes a DNA of random PVectors)
+  # Constructor (makes a DNA of rand PVectors)
   def initialize(newgenes=nil)
     @maxforce = 0.1
     @lifetime = 300
@@ -15,9 +15,9 @@ class DNA
       @genes = newgenes
     else
       @genes = Array.new(@lifetime) do
-        angle = random(TWO_PI)
+        angle = rand(TWO_PI)
         gene = PVector.new(cos(angle), sin(angle))
-        gene.mult(random(0, @maxforce))
+        gene.mult(rand(0 ..  @maxforce))
         gene
       end
     end
@@ -31,7 +31,7 @@ class DNA
   def crossover(partner)
     child = Array.new(@genes.size)
     # Pick a midpoint
-    crossover = random(genes.length).to_i
+    crossover = rand(genes.length).to_i
     # Take "half" from one and "half" from the other
     @genes.each_with_index do |g, i|
       if i > crossover
@@ -43,13 +43,13 @@ class DNA
     DNA.new(child)
   end
 
-  # Based on a mutation probability, picks a new random Vector
+  # Based on a mutation probability, picks a new rand Vector
   def mutate(m)
     @genes.each_with_index do |g, i|
-      if random(1) < m
-        angle = random(TWO_PI)
+      if rand(1) < m
+        angle = rand(TWO_PI)
         @genes[i] = PVector.new(cos(angle), sin(angle))
-        @genes[i].mult(random(0, @maxforce))
+        @genes[i].mult(rand(0 ..  @maxforce))
       end
     end
     @genes[0].normalize
@@ -138,8 +138,8 @@ class Population
     # Refill the population with children from the mating pool
     @population.each_with_index do |p, i|
       # Sping the wheel of fortune to pick two parents
-      m = random(@mating_pool.size).to_i
-      d = random(@mating_pool.size).to_i
+      m = rand(@mating_pool.size).to_i
+      d = rand(@mating_pool.size).to_i
       # Pick two parents
       mom = @mating_pool[m]
       dad = @mating_pool[d]

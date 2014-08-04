@@ -7,7 +7,7 @@ class Cell
     @y = y
     @w = w
 
-    @state = random(2).to_i
+    @state = rand(2).to_i
     @previous = @state
   end
 

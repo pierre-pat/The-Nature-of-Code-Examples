@@ -136,7 +136,7 @@ def setup
   @v = Vehicle.new(targets.size, rand(width), rand(height))
 end
 
-# Make a random ArrayList of targets to steer towards
+# Make a rand ArrayList of targets to steer towards
 def make_targets
   @targets = Array.new(8) { Vec2D.new(rand(width), rand(height)) }
 end

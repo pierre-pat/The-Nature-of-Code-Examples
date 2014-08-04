@@ -4,7 +4,7 @@ class Particle
 
   def initialize(location)
     @acceleration = PVector.new(0, 0)
-    @velocity = PVector.new(random(-1, 1), random(-2, 0))
+    @velocity = PVector.new(rand(-1.0 .. 1), rand(-2 ..0))
     @location = location.get
     @lifespan = 255.0
     @mass = 1

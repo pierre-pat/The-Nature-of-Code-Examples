@@ -7,7 +7,7 @@ class FlowField
     @cols = width / @resolution
     @rows = height / @resolution
 
-    noise_seed(random(10000))
+    noise_seed(rand(10000))
     xoff = -1
     @field = Array.new(@cols) do
       yoff = 0
@@ -114,7 +114,7 @@ def setup
   size(640, 340)
   @flowfield = FlowField.new(20, width, height)
   @vehicles = Array.new(120) do
-    Vehicle.new(PVector.new(random(width), random(height)), random(2, 5), random(0.1, 0.5), self)
+    Vehicle.new(PVector.new(rand(width), rand(height)), rand(2 ..   5), rand(0.1 .. 0.5), self)
   end
 end
 
