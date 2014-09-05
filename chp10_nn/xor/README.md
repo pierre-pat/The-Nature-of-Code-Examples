@@ -1,10 +1,7 @@
 Building the nn Library
 ===================
 
-You will need to use jruby to run the included Rakefile
+You will need to use jruby to run the included Rakefile, you also need the rake-compiler gem. This is the way jruby-extensions get built for eg ruby-processing!!
 
-`jruby -S rake`
+`jruby -S rake compile`
 
-you may also need to set JAVA_HOME to point to your jdk eg
-
-`export JAVA_HOME=/opt/jdk1.7.0_51` for linux users 
