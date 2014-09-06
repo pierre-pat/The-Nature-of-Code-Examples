@@ -1,7 +1,6 @@
 # Daniel Shiffman
 # The Nature of Code
 # http://natureofcode.com
-
 # An animated drawing of a Neural Network
 
 class Neuron
@@ -25,31 +24,21 @@ class Neuron
     location.copy
   end
 
-  def xpos
-    location.x
-  end
-
-  def ypos
-    location.y
-  end
-
   # Receive an input
   def feedforward(input)
     # Accumulate it
     @sum += input
     # Activate it?
-    if (sum > 1)
-      fire
-      @sum = 0;  # Reset the sum to 0 if it fires
-    end
+    return sum unless sum > 1
+    fire
+    @sum = 0  # Reset the sum to 0 if it fires
   end
 
   # The Neuron fires
   def fire
-    @r = 64;   # It suddenly is bigger
-
+    @r = 64   # It suddenly is bigger
     # We send the output through all connections
-    connections.each {|c| c.feedforward(sum)}
+    connections.each { |c| c.feedforward(sum) }
   end
 
   # Draw it as a circle
@@ -59,10 +48,8 @@ class Neuron
     # Brightness is mapped to sum (NB: processing map function here)
     b = map1d(sum, (0 .. 1), (255 .. 0))
     fill(b)
-    ellipse(xpos, ypos, r, r)
-
+    ellipse(location.x, location.y, r, r)
     # Size shrinks down back to original dimensions
     @r = lerp(r, 32, 0.1)
   end
 end
-

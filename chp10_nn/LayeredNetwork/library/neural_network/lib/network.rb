@@ -1,7 +1,6 @@
 # The Nature of Code
 # Daniel Shiffman
 # http:#natureofcode.com
-
 # An animated drawing of a Neural Network
 
 class Network
@@ -22,8 +21,8 @@ class Network
 
   # We can connection two Neurons
   def connect(a, b, weight = 0.5)
-    c = Connection.new(a, b, weight)
-    a.join(c)
+    c = Connection.new a, b, weight
+    a.join c
     # Also add the Connection here
     connections << c
   end
@@ -33,10 +32,8 @@ class Network
   def feedforward(input1, input2)
     n1 = neurons[0]
     n1.feedforward(input1)
-
     n2 = neurons[1]
     n2.feedforward(input2)
-
   end
 
   # Update the animation
@@ -49,9 +46,7 @@ class Network
     push_matrix
     translate(location.x, location.y)
     neurons.each { |n| n.display }
-
     connections.each { |c| c.display }
     pop_matrix
   end
 end
-
