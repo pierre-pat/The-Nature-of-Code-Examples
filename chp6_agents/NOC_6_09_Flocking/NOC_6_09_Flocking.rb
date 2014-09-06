@@ -1,11 +1,13 @@
 # The Nature of Code
 # NOC_6_09_Flocking
+load_library :vecmath
+
 class Boid
-  attr_reader :location, :velocity
+  attr_reader :location, :velocity, :acceleration
   def initialize(x, y)
-    @acceleration = PVector.new
-    @velocity = PVector.new(rand(-1.0 .. 1), rand(-1.0 .. 1))
-    @location = PVector.new(x, y)
+    @acceleration = Vec2D.new
+    @velocity = Vec2D.new(rand(-1.0 .. 1), rand(-1.0 .. 1))
+    @location = Vec2D.new(x, y)
     @r = 3
     @maxspeed = 3
     @maxforce = 0.05
@@ -19,7 +21,7 @@ class Boid
   end
 
   def apply_force(force)
-    @acceleration.add(force)
+    @acceleration += force
   end
 
   def flock(boids)
@@ -27,7 +29,7 @@ class Boid
     ali = align(boids)
     coh = cohesion(boids)
 
-    sep.mult(1.5)
+    sep *= 1.5
 
     apply_force(sep)
     apply_force(ali)
@@ -35,40 +37,40 @@ class Boid
   end
 
   def seek(target)
-    desired = PVector.sub(target, @location)
-    return if desired.mag == 0
+    desired = target - location
+    return if desired.mag < PConstants.EPSILON
 
-    desired.normalize
-    desired.mult(@maxspeed)
+    desired.normalize!
+    desired *= @maxspeed
 
-    steer = PVector.sub(desired, @velocity)
-    steer.limit(@maxforce)
+    steer = desired - velocity
+    steer.set_mag(@maxforce) { steer.mag > @maxforce }
 
     steer
   end
 
   def separate(vehicles)
-    desired_separation = @r*2
-    sum = PVector.new
+    desired_separation = @r * 2
+    sum = Vec2D.new
     count = 0
 
     vehicles.each do |other|
-      d = PVector.dist(@location, other.location)
-      if d > 0 and d < desired_separation
-        diff = PVector.sub(@location, other.location)
-        diff.normalize
-        diff.div(d)
-        sum.add(diff)
+      d = location.dist(other.location)
+      if (PConstants.EPSILON .. desired_separation).include? d
+        diff = location - other.location
+        diff.normalize!
+        diff /= d
+        sum += diff
         count += 1
       end
     end
 
     if count > 0
-      sum.div(count)
-      sum.normalize
-      sum.mult(@maxspeed)
-      steer = PVector.add(sum, @velocity)
-      steer.limit(@maxforce)
+      sum /= count
+      sum.normalize!
+      sum *= @maxspeed
+      steer = sum + velocity
+      steer.set_mag(@maxforce) { steer.mag > @maxforce }
       apply_force(steer)
     end
 
@@ -77,61 +79,53 @@ class Boid
 
   def align(boids)
     neighbordist = 50
-    sum = PVector.new
+    sum = Vec2D.new
     count = 0
     boids.each do |other|
-      d = PVector.dist(@location, other.location)
-      if d > 0 and d < neighbordist
-        sum.add(other.velocity)
+      d = location.dist(other.location)
+      if (PConstants.EPSILON .. neighbordist).include? d
+        sum += other.velocity
         count += 1
       end
     end
-
-    if count > 0
-      sum.div(count)
-      sum.normalize
-      sum.mult(@maxspeed)
-      steer = PVector.sub(sum, @velocity)
-      steer.limit(@maxforce)
-      return steer
-    else
-      return PVector.new
-    end
+    return Vec2D.new unless count > 0
+    sum /= count
+    sum.normalize!
+    sum *= @maxspeed
+    steer = sum - velocity
+    steer.set_mag(@maxforce) { steer.mag > @maxforce }
+    steer
   end
 
   def cohesion(boids)
     neighbordist = 50
-    sum = PVector.new
+    sum = Vec2D.new
     count = 0
     boids.each do |other|
-      d = PVector.dist(@location, other.location)
-      if d > 0 and d < neighbordist
-        sum.add(other.location)
+      d = location.dist(other.location)
+      if (PConstants.EPSILON .. neighbordist).include? d
+        sum += other.location
         count += 1
       end
     end
-
-    if count > 0
-      sum.div(count)
-      return seek(sum)
-    else
-      return PVector.new
-    end
+    return Vec2D.new unless count > 0
+    sum /= count
+    seek(sum)
   end
 
   def update
-    @velocity.add(@acceleration)
-    @velocity.limit(@maxspeed)
-    @location.add(@velocity)
-    @acceleration.mult(0)
+    @velocity += acceleration
+    @velocity.set_mag(@maxspeed) { velocity.mag > @maxspeed }
+    @location += velocity
+    @acceleration *= 0
   end
 
   def render
-    theta = @velocity.heading2D + 90.radians
-    fill(175)
-    stroke(0)
+    theta = velocity.heading + 90.radians
+    fill(255)
+    no_stroke
     push_matrix
-    translate(@location.x, @location.y)
+    translate(location.x, location.y)
     rotate(theta)
     begin_shape(TRIANGLES)
     vertex(0, -@r*2)
@@ -142,10 +136,10 @@ class Boid
   end
 
   def borders(width, height)
-    @location.x = width + @r if @location.x < -@r
-    @location.y = height + @r if @location.y < -@r
-    @location.x = -@r if @location.x > width + @r
-    @location.y = -@r if @location.y < -@r
+    @location.x = width + @r if location.x < -@r
+    @location.y = height + @r if location.y < -@r
+    @location.x = -@r if location.x > width + @r
+    @location.y = -@r if location.y < -@r
   end
 end
 
@@ -155,7 +149,7 @@ class Flock
   end
 
   def run(width, height)
-    @boids.each {|b| b.run(@boids, width, height) }
+    @boids.each { |b| b.run(@boids, width, height) }
   end
 
   def add_boid(b)
@@ -166,12 +160,12 @@ end
 def setup
   size(640, 360)
   @flock = Flock.new
-  200.times { @flock.add_boid(Boid.new(width/2, height/2)) }
-  smooth
+  200.times { @flock.add_boid(Boid.new(width / 2, height / 2)) }
+  smooth 4
 end
 
 def draw
-  background(255)
+  background(20, 20, 235)
   @flock.run(width, height)
 end
 

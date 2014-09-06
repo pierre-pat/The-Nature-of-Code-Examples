@@ -1,11 +1,6 @@
-# The Nature of Code
-# NOC_6_07_Separation
-
-load_library :vecmath
-
-
 class Vehicle
-  attr_reader :acceleration, :location, :velocity
+  include Processing::Proxy
+  attr_reader :location, :velocity, :acceleration
   def initialize(x, y)
     @location = Vec2D.new(x, y)
     @r = 12
@@ -17,6 +12,24 @@ class Vehicle
 
   def apply_force(force)
     @acceleration += force
+  end
+
+  def apply_behaviors(vehicles)
+    separate_force = separate(vehicles)
+    seek_force = seek(Vec2D.new(mouse_x, mouse_y))
+    separate_force *= 2
+    apply_force(separate_force)
+    apply_force(seek_force)
+  end
+
+  def seek(target)
+    desired = target - location
+    return desired if desired.mag < PConstants.EPSILON
+    desired.normalize!
+    desired *= @maxspeed
+    steer = desired - velocity
+    steer.set_mag(@maxforce) { steer.mag > @maxforce }
+    steer
   end
 
   def separate(vehicles)
@@ -39,8 +52,8 @@ class Vehicle
       sum *= @maxspeed
       steer = sum + velocity
       steer.set_mag(@maxforce) { steer.mag > @maxforce }
-      apply_force(steer)
     end
+    sum
   end
 
   def update
@@ -54,35 +67,15 @@ class Vehicle
     fill(175)
     stroke(0)
     push_matrix
-    translate(location.x, location.y)
+    translate(@location.x, @location.y)
     ellipse(0, 0, @r, @r)
     pop_matrix
   end
 
   def borders(width, height)
-    @location.x = width + @r if location.x < -@r
-    @location.y = height + @r if location.y < -@r
-    @location.x = -@r if location.x > width + @r
-    @location.y = -@r if location.y < -@r
+    @location.x = width + @r if @location.x < -@r
+    @location.y = height + @r if @location.y < -@r
+    @location.x = -@r if @location.x > width + @r
+    @location.y = -@r if @location.y < -@r
   end
-end
-
-def setup
-  size(640, 360)
-  @vehicles = Array.new(100) { Vehicle.new(rand(width), rand(height)) }
-end
-
-def draw
-  background(255)
-  @vehicles.each do |v|
-    v.separate(@vehicles)
-    v.update
-    v.borders(width, height)
-    v.display
-  end
-end
-
-
-def mouse_dragged
-  @vehicles.add(Vehicle.new(mouse_x, mouse_y))
 end
