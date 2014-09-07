@@ -14,7 +14,7 @@ module Eco
       end
     end
 
-    def << loc
+    def <<(loc)
       food << loc
     end
 
@@ -24,7 +24,6 @@ module Eco
         fill(175)
         rect(f.x, f.y, 8, 8)
       end
-
       food << Vec2D.new(rand(width), rand(height)) if rand < 0.001
     end
   end
@@ -36,13 +35,13 @@ module Eco
     attr_reader :width, :height, :health, :dna, :location
 
     def initialize(loc, dna)
-      @location = loc.dup
+      @location = loc.copy
       @health = 200
-      @xoff = rand(1000)
-      @yoff = rand(1000)
+      @xoff = rand(1_000)
+      @yoff = rand(1_000)
       @dna = dna
-      @maxspeed = map(dna.genes[0], 0, 1, 15, 0)
-      @r = map(dna.genes[0], 0, 1, 0, 50)
+      @maxspeed = map1d(dna.genes[0], (0 .. 1), (15 .. 0))
+      @r = map1d(dna.genes[0], (0 .. 1), (0 .. 50))
       @width, @height = $app.width, $app.height
     end
 
@@ -54,10 +53,9 @@ module Eco
 
     def eat(f)
       food = f.food
-
       food.delete_if do |food_loc|
         d = location.dist(food_loc)
-        if d < @r/2.0
+        if d < @r / 2.0
           @health += 100
           true
         end
@@ -65,11 +63,10 @@ module Eco
     end
 
     def reproduce
-      if rand < 0.0005
-        childDNA = dna.copy
-        childDNA.mutate(0.01)
-        return Bloop.new(location, childDNA)
-      end
+      return nil if rand >= 0.0005
+      childDNA = dna.copy
+      childDNA.mutate(0.01)
+      Bloop.new(location, childDNA)
     end
 
     def update
@@ -103,21 +100,18 @@ module Eco
 
   class DNA
     attr_reader :genes
-    def initialize(newgenes=[])
+    def initialize(newgenes = [])
       newgenes << rand(0 .. 1.0) if newgenes.empty?
       @genes = newgenes
     end
 
     def copy
-      DNA.new(genes.dup)
+      DNA.new(genes.clone)
     end
+
     # this code doesn't make sense unless there is more than one gene
     def mutate(m)
-      genes.each do |gene|
-        if rand < m
-          gene = rand(0 .. 1.0)
-        end
-      end
+      @genes.map! { |gene| (rand < m) ? rand(0 .. 1.0) : gene }
     end
   end
 

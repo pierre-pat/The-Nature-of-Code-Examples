@@ -19,7 +19,7 @@ attr_reader :world
 def setup
   size(640, 360)
   @world = World.new(20, width, height)
-  smooth
+  smooth 4
 end
 
 def draw
