@@ -10,7 +10,7 @@ class Vehicle
     @velocity = Vec2D.new(0, -2)
     @location = Vec2D.new(x, y)
     @r = 6
-    @maxspeed =4
+    @maxspeed = 4
     @maxforce = 0.1
   end
 
@@ -36,12 +36,12 @@ class Vehicle
   end
 
   def display
-    theta = @velocity.heading + PI / 2
+    theta = velocity.heading + PI / 2
     fill(127)
     stroke(0)
     stroke_weight(1)
     push_matrix
-    translate(@location.x, @location.y)
+    translate(location.x, location.y)
     rotate(theta)
     begin_shape
     vertex(0, -@r * 2)

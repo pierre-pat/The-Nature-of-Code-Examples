@@ -41,7 +41,7 @@ class Vehicle
   end
 
   def display
-    theta = velocity.heading + PI/2
+    theta = velocity.heading + PI / 2
     fill(127)
     stroke(0)
     stroke_weight(1)
@@ -49,9 +49,9 @@ class Vehicle
     translate(location.x, location.y)
     rotate(theta)
     begin_shape
-    vertex(0, -@r*2)
-    vertex(-@r, @r*2)
-    vertex(@r, @r*2)
+    vertex(0, -@r * 2)
+    vertex(-@r, @r * 2)
+    vertex(@r, @r * 2)
     end_shape(CLOSE)
     pop_matrix
   end

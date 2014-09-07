@@ -43,9 +43,8 @@ class Vehicle
     stroke(0)
     stroke_weight(1)
     no_fill
-    @history.each{|v| vertex(v.x, v.y) }
+    @history.each { |v| vertex(v.x, v.y) }
     end_shape
-
     theta = velocity.heading + PI / 2
     fill(127)
     stroke(0)
@@ -66,19 +65,16 @@ attr_reader :seeker
 
 def setup
   size(640, 360)
-  @seeker = Vehicle.new(width/2, height/2)
+  @seeker = Vehicle.new(width / 2, height / 2)
 end
 
 def draw
   background(255)
-
   mouse = Vec2D.new(mouse_x, mouse_y)
-
   fill(200)
   stroke(0)
   stroke_weight(2)
   ellipse(mouse.x, mouse.y, 48, 48)
-
   # Call the appropriate steering behaviors for our agents
   seeker.seek(mouse)
   seeker.update

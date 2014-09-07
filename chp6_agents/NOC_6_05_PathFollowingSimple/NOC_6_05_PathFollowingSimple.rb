@@ -39,26 +39,21 @@ class Vehicle
   end
 
   def follow(path)
-    #predict location 50 frames ahead
+    # predict location 50 frames ahead
     predict = velocity.copy
     predict.normalize!
     predict *= 50
     predict_loc = location + predict
-
     # look at the line segment
     a = path.start
     b = path.finish
-
     # get the normal point to that line
     normal_point = get_normal_point(predict_loc, a, b)
-
     dir = b - a
     dir.normalize!
     dir *= 10 # this could be based on velocity instead of arbitrary 10 pixels
     target = normal_point + dir
-
     distance = predict_loc.dist(normal_point)
-
     seek(target) if distance > path.radius
   end
 
@@ -66,7 +61,6 @@ class Vehicle
     ap = p - a
     ab = b - a
     ab.normalize!
-
     # project vector "diff" onto line by using the dot product
     ab *= ap.dot(ab)
     a + ab
@@ -86,13 +80,10 @@ class Vehicle
   def seek(target)
     desired = target - location
     return if desired.mag < PConstants.EPSILON
-
     desired.normalize!
     desired *= @maxspeed
-
     steer = desired - velocity
     steer.set_mag(@maxforce) { steer.mag > @maxforce }
-
     apply_force(steer)
   end
 
@@ -112,7 +103,7 @@ class Vehicle
     pop_matrix
   end
 
-  #wrap around
+  # wrap around
   def borders(path)
     if location.x > path.finish.x + @r
       @location.x = path.start.x - @r
@@ -135,10 +126,8 @@ def draw
   @path.display
   @car1.follow(@path)
   @car2.follow(@path)
-
   @car1.run
   @car2.run
-
   @car1.borders(@path)
   @car2.borders(@path)
 end

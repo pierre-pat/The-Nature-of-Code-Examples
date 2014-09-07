@@ -37,6 +37,7 @@ class Vehicle
     sum = Vec2D.new
     count = 0
     vehicles.each do |other|
+      next if other.equal? self
       d = location.dist(other.location)
       if (PConstants.EPSILON .. desired_separation).include? d
         diff = location - other.location

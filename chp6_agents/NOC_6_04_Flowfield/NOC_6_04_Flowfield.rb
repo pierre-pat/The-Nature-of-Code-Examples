@@ -24,14 +24,13 @@ class FlowField
   def display
     @field.each_with_index do |row, i|
       row.each_with_index do |v, j|
-        draw_vector(v, i * @resolution, j * @resolution, @resolution-1)
+        draw_vector(v, i * @resolution, j * @resolution, @resolution - 1)
       end
     end
   end
 
   def draw_vector(v, x, y, scayl)
     push_matrix
-    arrow_size = 4
     translate(x, y)
     stroke(0, 100)
     rotate(v.heading)
@@ -41,14 +40,14 @@ class FlowField
   end
 
   def lookup(vector)
-    column = constrain(vector.x/@resolution, 0, @cols-1)
-    row = constrain(vector.y/@resolution, 0, @rows-1)
+    column = constrain(vector.x / @resolution, 0, @cols - 1)
+    row = constrain(vector.y / @resolution, 0, @rows - 1)
     @field[column][row].copy
   end
 end
 
 class Vehicle
-  attr_reader :acceleration, :location, :velocity
+  attr_reader :acceleration, :location, :velocity, :world
 
   def initialize(loc, maxspeed, maxforce, world)
     @acceleration = Vec2D.new
@@ -60,9 +59,9 @@ class Vehicle
     @world = world
   end
 
-  def run(width, height)
+  def run
     update
-    borders(width, height)
+    borders
     display
   end
 
@@ -79,17 +78,17 @@ class Vehicle
 
   def follow(flowfield)
     # What is the vector at that spot in the flow field?
-    desired = flowfield.lookup(@location)
+    desired = flowfield.lookup(location)
     # Scale it up by maxspeed
     desired *= @maxspeed
     # Steering is desired minus velocity
-    steer = desired - @velocity
-    @velocity.set_mag(@maxforce) { velocity.mag > @maxforce }
+    steer = desired - velocity
+    steer.set_mag(@maxforce) { steer.mag > @maxforce }
     apply_force(steer)
   end
 
   def display
-    theta = velocity.heading + PI/2
+    theta = velocity.heading + PI / 2
     fill(127)
     stroke(0)
     stroke_weight(1)
@@ -97,18 +96,18 @@ class Vehicle
     translate(location.x, location.y)
     rotate(theta)
     begin_shape
-    vertex(0, -@r*2)
-    vertex(-@r, @r*2)
-    vertex(@r, @r*2)
+    vertex(0, -@r * 2)
+    vertex(-@r, @r * 2)
+    vertex(@r, @r * 2)
     end_shape(CLOSE)
     pop_matrix
   end
 
-  def borders(width, height)
-    @location.x = @world.width+@r if location.x < -@r
-    @location.y = @world.height+@r if location.y < -@r
-    @location.x = -@r if location.x > @world.width+@r
-    @location.y = -@r if location.y > @world.height+@r
+  def borders
+    @location.x = world.width + @r if location.x < -@r
+    @location.y = world.height + @r if location.y < -@r
+    @location.x = -@r if location.x > world.width + @r
+    @location.y = -@r if location.y > world.height + @r
   end
 end
 
@@ -116,7 +115,12 @@ def setup
   size(640, 340)
   @flowfield = FlowField.new(20, width, height)
   @vehicles = Array.new(120) do
-    Vehicle.new(Vec2D.new(rand(width), rand(height)), rand(2.0 .. 5), rand(0.1 .. 0.5), self)
+    Vehicle.new(
+      Vec2D.new(rand(width), rand(height)),
+      rand(2.0 .. 5),
+      rand(0.1 .. 0.5),
+      self
+    )
   end
 end
 
@@ -124,7 +128,7 @@ def draw
   background(255)
   @vehicles.each do |v|
     v.follow(@flowfield)
-    v.run(width, height)
+    v.run
   end
   @flowfield.display
 end

@@ -3,7 +3,6 @@
 
 load_library :vecmath
 
-
 class Vehicle
   attr_reader :acceleration, :location, :velocity
   def initialize(x, y)
@@ -24,6 +23,7 @@ class Vehicle
     sum = Vec2D.new
     count = 0
     vehicles.each do |other|
+      next if other.equal? self
       d = location.dist(other.location)
       if (PConstants.EPSILON .. desired_separation).include? d
         diff = location - other.location
@@ -33,14 +33,13 @@ class Vehicle
         count += 1
       end
     end
-    if count > 0
-      sum /= count
-      sum.normalize!
-      sum *= @maxspeed
-      steer = sum + velocity
-      steer.set_mag(@maxforce) { steer.mag > @maxforce }
-      apply_force(steer)
-    end
+    return if count == 0
+    sum /= count
+    sum.normalize!
+    sum *= @maxspeed
+    steer = sum + velocity
+    steer.set_mag(@maxforce) { steer.mag > @maxforce }
+    apply_force(steer)
   end
 
   def update
@@ -84,5 +83,5 @@ end
 
 
 def mouse_dragged
-  @vehicles.add(Vehicle.new(mouse_x, mouse_y))
+  @vehicles << Vehicle.new(mouse_x, mouse_y)
 end

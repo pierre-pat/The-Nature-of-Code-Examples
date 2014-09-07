@@ -4,7 +4,7 @@
 load_library :vecmath
 
 class Vehicle
-  attr_reader :location, :velocity, :acceleration
+  attr_reader :location, :velocity, :acceleration, :world
   def initialize(x, y, world, safe_distance)
     @acceleration = Vec2D.new
     @velocity = Vec2D.new(3, -2)
@@ -32,19 +32,19 @@ class Vehicle
     @acceleration *= 0
   end
 
-  def boundaries(width, height)
+  def boundaries
     if location.x < @d
       desired = Vec2D.new(@maxspeed, velocity.y)
-    elsif location.x > @world.width - @d
+    elsif location.x > world.width - @d
       desired = Vec2D.new(-@maxspeed, velocity.y)
     elsif location.y < @d
       desired = Vec2D.new(velocity.x, @maxspeed)
-    elsif location.y > @world.height - @d
+    elsif location.y > world.height - @d
       desired = Vec2D.new(velocity.x, -@maxspeed)
     else
       desired = nil
     end
-    return if desired == nil
+    return if desired.nil?
     desired.normalize!
     desired *= @maxspeed
     steer = desired - velocity
@@ -53,7 +53,7 @@ class Vehicle
   end
 
   def display
-    theta = @velocity.heading + PI / 2
+    theta = velocity.heading + PI / 2
     fill(127)
     stroke(0)
     stroke_weight(1)
@@ -61,9 +61,9 @@ class Vehicle
     translate(location.x, location.y)
     rotate(theta)
     begin_shape
-    vertex(0, -@r*2)
-    vertex(-@r, @r*2)
-    vertex(@r, @r*2)
+    vertex(0, -@r * 2)
+    vertex(-@r, @r * 2)
+    vertex(@r, @r * 2)
     end_shape(CLOSE)
     pop_matrix
   end
@@ -86,6 +86,6 @@ def draw
   rect(width / 2, height / 2, width - @d * 2, height - @d * 2)
 
   # Call the appropriate steering behaviors for our agents
-  @seeker.boundaries(width, height)
+  @seeker.boundaries
   @seeker.run
 end

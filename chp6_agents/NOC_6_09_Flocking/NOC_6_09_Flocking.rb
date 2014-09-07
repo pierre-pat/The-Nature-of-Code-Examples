@@ -28,9 +28,7 @@ class Boid
     sep = separate(boids)
     ali = align(boids)
     coh = cohesion(boids)
-
     sep *= 1.5
-
     apply_force(sep)
     apply_force(ali)
     apply_force(coh)
@@ -39,13 +37,10 @@ class Boid
   def seek(target)
     desired = target - location
     return if desired.mag < PConstants.EPSILON
-
     desired.normalize!
     desired *= @maxspeed
-
     steer = desired - velocity
     steer.set_mag(@maxforce) { steer.mag > @maxforce }
-
     steer
   end
 
@@ -53,8 +48,8 @@ class Boid
     desired_separation = @r * 2
     sum = Vec2D.new
     count = 0
-
     vehicles.each do |other|
+      next if other.equal? self
       d = location.dist(other.location)
       if (PConstants.EPSILON .. desired_separation).include? d
         diff = location - other.location
@@ -64,7 +59,6 @@ class Boid
         count += 1
       end
     end
-
     if count > 0
       sum /= count
       sum.normalize!
@@ -73,7 +67,6 @@ class Boid
       steer.set_mag(@maxforce) { steer.mag > @maxforce }
       apply_force(steer)
     end
-
     sum
   end
 
@@ -102,6 +95,7 @@ class Boid
     sum = Vec2D.new
     count = 0
     boids.each do |other|
+      next if other.equal? self
       d = location.dist(other.location)
       if (PConstants.EPSILON .. neighbordist).include? d
         sum += other.location
@@ -128,9 +122,9 @@ class Boid
     translate(location.x, location.y)
     rotate(theta)
     begin_shape(TRIANGLES)
-    vertex(0, -@r*2)
-    vertex(-@r, @r*2)
-    vertex(@r, @r*2)
+    vertex(0, -@r * 2)
+    vertex(-@r, @r * 2)
+    vertex(@r, @r * 2)
     end_shape
     pop_matrix
   end

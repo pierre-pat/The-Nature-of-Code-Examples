@@ -14,24 +14,24 @@ class Path
     @points << Vec2D.new(x, y)
   end
 
-  def get_start
+  def start
     @points[0]
   end
 
-  def get_end
+  def end
     @points[-1]
   end
 
   def display
-    draw = Proc.new do |color, weight|
+    draw = proc do |color, weight|
       stroke(color)
       stroke_weight(weight)
       no_fill
       begin_shape
-      @points.each{ |v| vertex(v.x, v.y)}
+      @points.each { |v| vertex(v.x, v.y) }
       end_shape
     end
-    draw.call(175, @radius*2) # draw thick line with radius
+    draw.call(175, @radius * 2) # draw thick line with radius
     draw.call(0, 1) # draw thing middle line
   end
 end
@@ -55,7 +55,7 @@ class Vehicle
   end
 
   def follow(path)
-    #predict location 50 frames ahead
+    # predict location 50 frames ahead
     predict = velocity.copy
     predict.normalize!
     predict *= 50
@@ -63,28 +63,22 @@ class Vehicle
     worldrecord = 100_000 # far away
     target = nil
     normal = nil
-
-    (0...path.points.size - 1).each do |i|
+    (0 ... path.points.size - 1).each do |i|
       a = path.points[i]
       b = path.points[i + 1]
-
       normal_point = get_normal_point(predict_loc, a, b)
       normal_point = b.copy if normal_point.x < a.x || normal_point.x > b.x
-
       distance = predict_loc.dist(normal_point)
-
       if distance < worldrecord
         worldrecord = distance
         normal = normal_point
         dir = b - a
         dir.normalize!
-
         dir *= 10
         target = normal_point.copy
         target += dir
       end
     end
-
     seek(target) if worldrecord > path.radius
   end
 
@@ -92,7 +86,6 @@ class Vehicle
     ap = p - a
     ab = b - a
     ab.normalize!
-
     # project vector "diff" onto line by using the dot product
     ab *= ap.dot(ab)
     a + ab
@@ -135,45 +128,38 @@ class Vehicle
     pop_matrix
   end
 
-  #wrap around
+  # wrap around
   def borders(path)
-    if @location.x > path.get_end.x + @r
-      @location.x = path.get_start.x - @r
-      @location.y = path.get_start.y + (@location.y - path.get_end.y)
-    end
+    return if @location.x < path.end.x + @r
+    @location.x = path.start.x - @r
+    @location.y = path.start.y + (@location.y - path.end.y)
   end
 end
 
 def setup
   size(640, 360)
-  start = Vec2D.new(0, height/3)
-  finish = Vec2D.new(width, 2*height/3)
   new_path
-  @car1 = Vehicle.new(Vec2D.new(0, height/2), 2, 0.04)
-  @car2 = Vehicle.new(Vec2D.new(0, height/2), 3, 0.1)
+  @car1 = Vehicle.new(Vec2D.new(0, height / 2), 2, 0.04)
+  @car2 = Vehicle.new(Vec2D.new(0, height / 2), 3, 0.1)
 end
 
 def draw
   background(255)
-
   @path.display
-
   @car1.follow(@path)
   @car2.follow(@path)
-
   @car1.run
   @car2.run
-
   @car1.borders(@path)
   @car2.borders(@path)
 end
 
 def new_path
   @path = Path.new
-  @path.add_point(-20, height/2)
-  @path.add_point(rand(0 ..  width/2), rand(0 ..  height))
-  @path.add_point(rand(width / 2 ..  width), rand(0 ..  height))
-  @path.add_point(width+20, height/2)
+  @path.add_point(-20, height / 2)
+  @path.add_point(rand(0 ..  width / 2), rand(0 .. height))
+  @path.add_point(rand(width / 2 ..  width), rand(0 .. height))
+  @path.add_point(width + 20, height / 2)
 end
 
 def mouse_pressed

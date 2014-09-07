@@ -4,7 +4,7 @@
 load_library :vecmath
 
 class Vehicle
-  attr_reader :history, :location, :velocity, :acceleration
+  attr_reader :history, :location, :velocity, :acceleration, :world
   def initialize(x, y, world, safe_distance)
     @acceleration = Vec2D.new
     @velocity = Vec2D.new(3, -2)
@@ -35,19 +35,19 @@ class Vehicle
     @history.shift if history.size > 100
   end
 
-  def boundaries(width, height)
+  def boundaries
     if location.x < @d
       desired = Vec2D.new(@maxspeed, velocity.y)
-    elsif location.x > @world.width - @d
+    elsif location.x > world.width - @d
       desired = Vec2D.new(-@maxspeed, velocity.y)
     elsif location.y < @d
       desired = Vec2D.new(velocity.x, @maxspeed)
-    elsif location.y > @world.height - @d
+    elsif location.y > world.height - @d
       desired = Vec2D.new(velocity.x, - @maxspeed)
     else
       desired = nil
     end
-    return if desired == nil
+    return if desired.nil?
     desired.normalize!
     desired *= @maxspeed
     steer = desired - velocity
@@ -62,7 +62,6 @@ class Vehicle
     no_fill
     history.each { |v| vertex(v.x, v.y) }
     end_shape
-
     theta = velocity.heading + PI / 2
     fill(127)
     stroke(0)
@@ -89,12 +88,11 @@ end
 
 def draw
   background(255)
-
   stroke(175)
   no_fill
   rect_mode(CENTER)
   rect(width / 2, height / 2, width - @d * 2, height - @d * 2)
   # Call the appropriate steering behaviors for our agents
-  seeker.boundaries(width, height)
+  seeker.boundaries
   seeker.run
 end
