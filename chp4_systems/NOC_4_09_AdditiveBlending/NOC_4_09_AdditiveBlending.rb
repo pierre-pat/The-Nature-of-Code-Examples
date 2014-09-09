@@ -1,74 +1,19 @@
 #  NOC_4_09_AdditiveBlending
 # The Nature of Code
 # http://natureofcode.com
+load_library :vecmath
+require_relative 'particle_system'
 
-class Particle
-
-  def initialize(location, img)
-    @acceleration = PVector.new(0, 0.05)
-    @velocity = PVector.new(rand(-1.0 .. 1), rand(-1 .. 0))
-    @velocity.mult(2)
-    @location = location.get
-    @img = img
-    @lifespan = 255.0
-  end
-
-  def run
-    update
-    render
-  end
-
-  # Method to update location
-  def update
-    @velocity.add(@acceleration)
-    @location.add(@velocity)
-    @lifespan -= 2.0
-  end
-
-  # Method to display
-  def render
-    image_mode(CENTER)
-    tint(@lifespan)
-    image(@img, @location.x, @location.y)
-  end
-
-  # Is the particle still useful?
-  def is_dead?
-    @lifespan < 0.0
-  end
-end
-
-class ParticleSystem
-  def initialize(num, origin)
-    @origin = origin
-    @img = load_image("#{Dir.pwd}/data/texture.png")
-    @particles = Array.new(num) { Particle.new(@origin, @img) }
-  end
-
-  def add_particle(p=nil)
-    p ||= Particle.new(@origin, @img)
-    @particles << p
-  end
-
-  def run
-    @particles.each{ |p| p.run }
-    @particles.delete_if{ |p| p.is_dead? }
-  end
-
-  def is_dead?
-    @particles.empty?
-  end
-end
+attr_reader :ps
 
 def setup
   size(640, 340, P2D)
-  @ps = ParticleSystem.new(0, PVector.new(width/2, 50))
+  @ps = ParticleSystem.new(0, Vec2D.new(width / 2, 50))
 end
 
 def draw
-  # blend_mode(ADD)
+  blend_mode(ADD)
   background(0)
-  @ps.run
-
-  10.times{ @ps.add_particle }
+  ps.run
+  10.times{ ps.add_particle }
 end

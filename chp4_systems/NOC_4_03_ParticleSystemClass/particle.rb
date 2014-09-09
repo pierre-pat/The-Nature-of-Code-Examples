@@ -1,17 +1,12 @@
-# The Nature of Code
-# http://natureofcode.com
-
-# Simple Particle System
-# A simple Particle class
-load_library :vecmath
+# NOC_4_03_ParticleSystemClass
 
 class Particle
-
+  include Processing::Proxy
   attr_reader :acceleration, :lifespan, :location, :velocity
   def initialize(location)
+    @location = location
     @acceleration = Vec2D.new(0, 0.05)
-    @velocity = Vec2D.new(rand(-1.0 .. 1), rand(-1.0 .. 1))
-    @location = location.copy
+    @velocity = Vec2D.new(rand(-1.0 .. 1), rand(-1 .. 0))
     @lifespan = 255.0
   end
 
@@ -41,18 +36,4 @@ class Particle
   end
 end
 
-attr_reader :p
 
-def setup
-  size(800, 200)
-  @p = Particle.new(Vec2D.new(width / 2, 20))
-  background(255)
-  smooth 4
-
-end
-
-def draw
-  background(255)
-  p.run
-  @p = Particle.new(Vec2D.new(width / 2, 20)) if p.dead?
-end
