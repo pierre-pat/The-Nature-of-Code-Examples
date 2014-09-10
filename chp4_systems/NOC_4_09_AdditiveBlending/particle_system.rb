@@ -7,7 +7,7 @@ require_relative 'particle'
 
 module Runnable
   def run
-    self.reject! { |item| item.dead? }
+    reject! { |item| item.dead? }
     each    { |item| item.run }
   end
 end
@@ -15,7 +15,8 @@ end
 class ParticleSystem
   include Processing::Proxy, Enumerable, Runnable
   extend Forwardable
-  def_delegators(:@particles, :reject!, :<<, :each)
+  def_delegators(:@particles, :reject!, :<<, :each, :empty)
+  def_delegator(:@particles, :empty?, :dead?)
 
   def initialize(num, origin)
     @origin = origin
@@ -26,9 +27,5 @@ class ParticleSystem
   def add_particle(p = nil)
     p ||= Particle.new(@origin, @img)
     self << p
-  end
-
-  def dead?
-    self.empty?
   end
 end

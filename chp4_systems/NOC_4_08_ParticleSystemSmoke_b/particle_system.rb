@@ -7,16 +7,16 @@ require_relative 'particle'
 
 module Runnable
   def run
-    self.reject! { |item| item.lifespan <= 0 }
+    reject! { |item| item.lifespan <= 0 }
     each    { |item| item.run }
   end
 end
 
 class ParticleSystem
+  include Enumerable, Runnable
   extend Forwardable
-  def_delegators(:@particles, :reject!, :<<, :each)
-  include Enumerable
-  include Runnable
+  def_delegators(:@particles, :reject!, :<<, :each, :empty?)
+  def_delegator(:@particles, :empty?, :dead?)
 
   def initialize(num, origin, img)
     @origin = origin.copy
@@ -33,10 +33,6 @@ class ParticleSystem
 
   def apply_force(f)
     each { |p| p.apply_force(f) }
-  end
-
-  def dead?
-    self.empty?
   end
 
   private

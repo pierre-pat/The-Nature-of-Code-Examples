@@ -3,7 +3,7 @@ require 'forwardable'
 
 module Runnable
   def run
-    self.reject! { |item| item.dead? }
+    reject! { |item| item.dead? }
     each    { |item| item.run }
   end
 end

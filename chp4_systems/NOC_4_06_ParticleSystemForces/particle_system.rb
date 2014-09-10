@@ -3,16 +3,15 @@ require_relative 'particle'
 
 module Runnable
   def run
-    self.reject! { |item| item.dead? }
+    reject! { |item| item.dead? }
     each    { |item| item.run }
   end
 end
 
 class ParticleSystem
+  include Enumerable, Runnable
   extend Forwardable
   def_delegators(:@particle_system, :each, :<<, :reject!)
-  include Enumerable
-  include Runnable
 
   attr_reader :origin
 
